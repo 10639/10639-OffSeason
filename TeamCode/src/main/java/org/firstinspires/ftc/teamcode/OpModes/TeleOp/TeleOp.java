@@ -46,9 +46,9 @@ public class TeleOp extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         driveTrain = new MecanumDrive(hardwareMap, Helpers.defaultTelePose);
-        armSystem = new Arm(hardwareMap, telemetry);
-        intakeSystem = new Intake(hardwareMap, telemetry);
-        pixelDetector = new Box(hardwareMap, telemetry);
+        armSystem = new Arm(hardwareMap);
+        intakeSystem = new Intake(hardwareMap);
+        pixelDetector = new Box(hardwareMap);
 
         controller = new PIDController(Constants.Kp, Constants.Ki, Constants.Kd);
 
@@ -92,9 +92,10 @@ public class TeleOp extends LinearOpMode {
                 speedState = SpeedState.FAST;
             }
 
-            driveTrain.initDrive(gamepad1, speedState.multiplier, telemetry);
-            armSystem.loop(gamepad2);
-            intakeSystem.loop(gamepad2);
+            driveTrain.loop(gamepad1, speedState.multiplier, telemetry);
+            armSystem.loop(gamepad2, telemetry);
+            intakeSystem.loop(gamepad2, telemetry);
+            pixelDetector.loop(telemetry);
 
             if (gamepad1.square) {
                 target = Constants.LIFT_FIRST_LEVEL;
@@ -153,18 +154,6 @@ public class TeleOp extends LinearOpMode {
                 }
             }
 
-            switch(pixelDetector.getCount()) {
-                case EMPTY:
-                    telemetry.addLine("[Deposit Box]: Empty");
-                    break;
-                case ONE_PIXEL:
-                    telemetry.addLine("[Deposit Box]: One Pixel Detected");
-                    break;
-                case FULL:
-                    telemetry.addLine("[Deposit Box]: Two Pixels Detected");
-                    break;
-            }
-            telemetry.update();
         }
     }
 }

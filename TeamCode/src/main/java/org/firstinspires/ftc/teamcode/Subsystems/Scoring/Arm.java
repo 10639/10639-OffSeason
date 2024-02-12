@@ -14,7 +14,7 @@ public class Arm {
 
     private final HardwareMap hardwareMap;
     public ServoImplEx leftPivot, rightPivot;
-    public Arm(HardwareMap hardwareMap, Telemetry telemetry) {
+    public Arm(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
     }
 
@@ -44,7 +44,7 @@ public class Arm {
         rightPivot.setPwmDisable();
     }
 
-    public void loop(Gamepad gamepad) {
+    public void loop(Gamepad gamepad, Telemetry telemetry) {
 
 
 

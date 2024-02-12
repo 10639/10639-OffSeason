@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Scoring;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -11,7 +13,7 @@ public class Box {
 
     private final HardwareMap hardwareMap;
     public DistanceSensor pixelDetector;
-    public Box(HardwareMap hardwareMap, Telemetry telemetry) {
+    public Box(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
     }
 
@@ -28,7 +30,7 @@ public class Box {
         Size = boxInfo.EMPTY;
     }
 
-    public boxInfo getCount() {
+    public void loop(Telemetry telemetry) {
         double distance = pixelDetector.getDistance(DistanceUnit.CM);
         if(distance <= Constants.EMPTY_BOX_HIGH && distance > Constants.ONE_PIXEL_HIGH) {
            Size = boxInfo.EMPTY;
@@ -39,7 +41,18 @@ public class Box {
         if(distance <= Constants.FULL_BOX_HIGH){
             Size = boxInfo.FULL;
         }
-        return Size;
+        switch(Size) {
+            case EMPTY:
+                telemetry.addLine("[Deposit Box]: Empty");
+                break;
+            case ONE_PIXEL:
+                telemetry.addLine("[Deposit Box]: One Pixel Detected");
+                break;
+            case FULL:
+                telemetry.addLine("[Deposit Box]: Two Pixels Detected");
+                break;
+        }
+        telemetry.update();
     }
 
 

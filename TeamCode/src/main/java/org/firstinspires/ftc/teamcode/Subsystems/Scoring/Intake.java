@@ -17,7 +17,7 @@ public class Intake {
     public DcMotorEx sweeper;
     public CRServo boxSweeper;
     public Servo intake;
-    public Intake(HardwareMap hardwareMap, Telemetry telemetry) {
+    public Intake(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
     }
 
@@ -55,7 +55,7 @@ public class Intake {
         terminateSweep();
     }
 
-    public void loop(Gamepad gamepad) {
+    public void loop(Gamepad gamepad, Telemetry telemetry) {
 
       if(gamepad.right_bumper) { //Extend Intake + Spin Intake Pixels + Sweep inside Box
           extendIntake();

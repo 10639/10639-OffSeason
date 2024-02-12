@@ -473,7 +473,7 @@ public final class MecanumDrive {
         );
     }
 
-    public void initDrive(Gamepad gamepad, double speedMultiplier, Telemetry telemetry) {
+    public void loop(Gamepad gamepad, double speedMultiplier, Telemetry telemetry) {
 
         setDrivePowers(new PoseVelocity2d(
                 new Vector2d(
