@@ -8,11 +8,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImpl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class Arm {
 
     private final HardwareMap hardwareMap;
     public ServoImplEx leftPivot, rightPivot;
-    public Arm(HardwareMap hardwareMap) {
+    public Arm(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
     }
 

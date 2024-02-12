@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 
 public class Intake {
 
@@ -15,7 +17,7 @@ public class Intake {
     public DcMotorEx sweeper;
     public CRServo boxSweeper;
     public Servo intake;
-    public Intake(HardwareMap hardwareMap) {
+    public Intake(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
     }
 

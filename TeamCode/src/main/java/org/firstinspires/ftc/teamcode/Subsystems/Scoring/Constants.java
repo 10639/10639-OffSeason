@@ -19,6 +19,8 @@ public class Constants {
     public static final int LIFT_SECOND_LEVEL = (int) (SECOND_LEVEL * COUNTS_PER_INCH);
     public static final int LIFT_THIRD_LEVEL = (int) (THIRD_LEVEL * COUNTS_PER_INCH);
 
+
+    /** ======= CONSTANTS FOR DRIVETRAIN  ======= **/
     //Proportional, Integral, Derivative gains.
     public static final double Kp = 0.1, Ki = 0, Kd = 0.00001;
     //P -> Ability to Reach Target Position
@@ -28,6 +30,10 @@ public class Constants {
     // Feedforward component (F) -> Since we're doing this for a lift; we'll do a G value (gravity).
     //Refer to https://www.ctrlaltftc.com/feedforward-control#slide-gravity-feedforward
     public static final double Kf = 0.04;
+
+    public static final double DEFAULT_SPEED = 0.5;
+    public static final double BOOST_SPEED = 0.9;
+
 
 
     /** ======= CONSTANTS FOR ARM  ======= **/
@@ -66,6 +72,9 @@ public class Constants {
 
     public static final double FULL_BOX_LOW = 1;
     public static final double FULL_BOX_HIGH = 3;
+
+
+
 
 
 

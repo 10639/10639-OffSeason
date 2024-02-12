@@ -4,13 +4,14 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Box {
 
     private final HardwareMap hardwareMap;
     public DistanceSensor pixelDetector;
-    public Box(HardwareMap hardwareMap) {
+    public Box(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
     }
 
