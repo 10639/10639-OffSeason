@@ -31,9 +31,6 @@ public class Constants {
     //Refer to https://www.ctrlaltftc.com/feedforward-control#slide-gravity-feedforward
     public static final double Kf = 0.04;
 
-    public static final double DEFAULT_SPEED = 0.5;
-    public static final double BOOST_SPEED = 0.9;
-
 
 
     /** ======= CONSTANTS FOR ARM  ======= **/

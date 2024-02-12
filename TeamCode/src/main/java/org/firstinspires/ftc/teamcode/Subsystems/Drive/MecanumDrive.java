@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.OpModes.TeleOp.TeleOp;
 import org.firstinspires.ftc.teamcode.RoadRunner.Drawing;
@@ -472,7 +473,7 @@ public final class MecanumDrive {
         );
     }
 
-    public void initDrive(Gamepad gamepad, double speedMultiplier) {
+    public void initDrive(Gamepad gamepad, double speedMultiplier, Telemetry telemetry) {
 
         setDrivePowers(new PoseVelocity2d(
                 new Vector2d(
@@ -481,6 +482,13 @@ public final class MecanumDrive {
                 ),
                 -gamepad.right_stick_x * speedMultiplier
         ));
+
+        updatePoseEstimate();
+
+        telemetry.addData("[X-Axis]: " , pose.position.x);
+        telemetry.addData("[Y-Axis]: ", pose.position.y);
+        telemetry.addData("[Heading (Degrees)]: ", Math.toDegrees(pose.heading.toDouble()));
+        telemetry.update();
 
     }
 }

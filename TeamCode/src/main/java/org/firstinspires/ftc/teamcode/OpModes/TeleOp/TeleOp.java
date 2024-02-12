@@ -92,7 +92,7 @@ public class TeleOp extends LinearOpMode {
                 speedState = SpeedState.FAST;
             }
 
-            driveTrain.initDrive(gamepad1, speedState.multiplier);
+            driveTrain.initDrive(gamepad1, speedState.multiplier, telemetry);
             armSystem.loop(gamepad2);
             intakeSystem.loop(gamepad2);
 
@@ -155,13 +155,13 @@ public class TeleOp extends LinearOpMode {
 
             switch(pixelDetector.getCount()) {
                 case EMPTY:
-                    telemetry.addLine("[Deposit Box] Empty");
+                    telemetry.addLine("[Deposit Box]: Empty");
                     break;
                 case ONE_PIXEL:
-                    telemetry.addLine("[Deposit Box] One Pixel Detected");
+                    telemetry.addLine("[Deposit Box]: One Pixel Detected");
                     break;
                 case FULL:
-                    telemetry.addLine("[Deposit Box] Two Pixels Detected");
+                    telemetry.addLine("[Deposit Box]: Two Pixels Detected");
                     break;
             }
             telemetry.update();
