@@ -33,7 +33,7 @@ public class PIDFLift extends OpMode {
 
         rightSlide = hardwareMap.get(DcMotorEx.class, "rightSlide");
         leftSlide = hardwareMap.get(DcMotorEx.class, "leftSlide");
-        armSystem = new Arm(hardwareMap, telemetry);
+        armSystem = new Arm(hardwareMap);
         armSystem.init();
 
         rightSlide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
