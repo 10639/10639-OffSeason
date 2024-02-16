@@ -41,6 +41,7 @@ public class Box {
         if(distance <= Constants.FULL_BOX_HIGH){
             Size = boxInfo.FULL;
         }
+        telemetry.addLine("--- Pixel Detection ---");
         switch(Size) {
             case EMPTY:
                 telemetry.addLine("[Deposit Box]: Empty");
@@ -52,7 +53,6 @@ public class Box {
                 telemetry.addLine("[Deposit Box]: Two Pixels Detected");
                 break;
         }
-        telemetry.update();
     }
 
 

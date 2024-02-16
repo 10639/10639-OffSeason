@@ -33,6 +33,9 @@ repositories {
     maven {
         url = 'https://maven.brott.dev/'
     }
+    maven {
+        url = 'https://jitpack.io'
+    }
 }
 
 dependencies {
@@ -45,4 +48,5 @@ dependencies {
     implementation "com.acmerobotics.dashboard:dashboard:0.4.14"
     implementation 'com.acmerobotics.roadrunner:core:1.0.0-beta6'
     implementation 'com.acmerobotics.roadrunner:actions:1.0.0-beta6'
+    implementation 'com.github.Eeshwar-Krishnan:PhotonFTC:main-SNAPSHOT'
 }

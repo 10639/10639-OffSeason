@@ -34,6 +34,7 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
@@ -66,13 +67,13 @@ public final class MecanumDrive {
                 RevHubOrientationOnRobot.UsbFacingDirection.UP;
 
         // drive model parameters
-        public double inPerTick = 1520.807291666667;
-        public double lateralInPerTick = 1030.636596193948;
+        public double inPerTick = 0.000657545506; //Old Val: 0.000657547758;
+        public double lateralInPerTick = inPerTick;
         public double trackWidthTicks = 0;
 
         // feedforward parameters (in tick units)
-        public double kS = 1.1244632205172862;
-        public double kV = 0.00011018924648216755;
+        public double kS = 0;
+        public double kV = 0;
         public double kA = 0;
 
         // path profile parameters (in inches)
@@ -215,8 +216,8 @@ public final class MecanumDrive {
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        leftFront.setDirection(DcMotor.Direction.REVERSE);
-        leftBack.setDirection(DcMotor.Direction.REVERSE);
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: reverse motor directions if needed
         //   leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -485,10 +486,9 @@ public final class MecanumDrive {
 
         updatePoseEstimate();
 
+        telemetry.addLine("--- Robot Pose ---");
         telemetry.addData("[X-Axis]: " , pose.position.x);
         telemetry.addData("[Y-Axis]: ", pose.position.y);
         telemetry.addData("[Heading (Degrees)]: ", Math.toDegrees(pose.heading.toDouble()));
-        telemetry.update();
-
     }
 }

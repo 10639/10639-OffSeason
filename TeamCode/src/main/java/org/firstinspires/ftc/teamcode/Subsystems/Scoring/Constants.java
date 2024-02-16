@@ -10,6 +10,10 @@ public class Constants {
     public static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
     //19.7498748746487
 
+    public static final double MAX_UP_VELO = 0.8;
+    public static final double MAX_DOWN_VELO = -0.1;
+
+
     static final double FIRST_LEVEL = 17;
     static final double SECOND_LEVEL = 19;
     static final double THIRD_LEVEL = 20;
@@ -18,6 +22,8 @@ public class Constants {
     public static final int LIFT_FIRST_LEVEL = (int) (FIRST_LEVEL * COUNTS_PER_INCH);
     public static final int LIFT_SECOND_LEVEL = (int) (SECOND_LEVEL * COUNTS_PER_INCH);
     public static final int LIFT_THIRD_LEVEL = (int) (THIRD_LEVEL * COUNTS_PER_INCH);
+
+
 
 
     /** ======= CONSTANTS FOR DRIVETRAIN  ======= **/
