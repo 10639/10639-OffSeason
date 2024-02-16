@@ -20,8 +20,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.Helpers;
 import java.util.List;
 
 @Photon
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "OffSeason_TeleOp")
-public class TeleOp extends LinearOpMode {
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "LoopTime_Test_Default")
+public class PhotonOnlyTele extends LinearOpMode {
 
 
     public MecanumDrive driveTrain;
@@ -46,26 +46,11 @@ public class TeleOp extends LinearOpMode {
         }
     }
     SpeedState speedState;
-    LynxModule CONTROL_HUB;
-    LynxModule EXPANSION_HUB;
+
 
 
     @Override
     public void runOpMode() throws InterruptedException {
-
-        // Enable Bulk Caching
-        //This mode enables the user's code to determine the best time to refresh the cached bulk-read data.
-        //Well organized code can place all the sensor reads in one location, and then just reset the cache once per control cycle
-        //This should get us faster responses as we have control over when the cache resets.
-
-        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
-        for (LynxModule module : allHubs) {
-            module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-        }
-        CONTROL_HUB = allHubs.get(0);
-        EXPANSION_HUB = allHubs.get(1);
-        //Debugging purposes ^ -- We can telemetry log the AMPs from each sensor/motor to see if a specific motor is draining too much power
-        //Which can be a hardware related reason or software reason.
 
         driveTrain = new MecanumDrive(hardwareMap, Helpers.defaultTelePose);
         armSystem = new Arm(hardwareMap);
@@ -106,7 +91,6 @@ public class TeleOp extends LinearOpMode {
         if (isStopRequested()) return;
         while (opModeIsActive() && !isStopRequested()) {
             loopTime.reset();
-            allHubs.forEach(LynxModule::clearBulkCache); //Reset Bulk Cache
 
             if (gamepad1.left_bumper) {
                 speedState = SpeedState.NORMAL;
@@ -174,19 +158,12 @@ public class TeleOp extends LinearOpMode {
                     armSystem.dePower();
                 }
             }
-                telemetry.addLine("--- Motor Voltages ---");
-                telemetry.addData("Control Hub Current (Amps)", CONTROL_HUB.getCurrent(CurrentUnit.AMPS));
-                telemetry.addData("Expansion Hub Current (Amps)", EXPANSION_HUB.getCurrent(CurrentUnit.AMPS));
-                telemetry.addData("Intake Current (Amps)", intakeSystem.sweeper.getCurrent(CurrentUnit.AMPS));
-                telemetry.addData("Left Slide Current (Amps)", leftSlide.getCurrent(CurrentUnit.AMPS));
-                telemetry.addData("Right Slide Current (Amps)", leftSlide.getCurrent(CurrentUnit.AMPS));
-
 
             double loopTimeMs = loopTime.milliseconds();
-                telemetry.addLine("--- Loop Times ---");
-                telemetry.addData("loopTimeMs", loopTimeMs);
-                telemetry.addData("loopTimeHz", 1000.0 / loopTimeMs);
-                telemetry.update();
+            telemetry.addLine("--- Loop Times ---");
+            telemetry.addData("loopTimeMs", loopTimeMs);
+            telemetry.addData("loopTimeHz", 1000.0 / loopTimeMs);
+            telemetry.update();
 
 
         }
