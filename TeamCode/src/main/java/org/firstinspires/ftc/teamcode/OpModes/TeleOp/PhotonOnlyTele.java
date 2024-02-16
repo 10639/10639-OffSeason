@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Helpers;
 import java.util.List;
 
 @Photon
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "LoopTime_Test_Default")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "LoopTime_Test_Photon")
 public class PhotonOnlyTele extends LinearOpMode {
 
 
