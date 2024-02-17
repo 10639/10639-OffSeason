@@ -13,7 +13,7 @@ public class Lift {
 
     private final HardwareMap hardwareMap;
     public DcMotorEx leftSlide, rightSlide;
-    public PIDController controller;
+    private PIDController controller;
     private double pid;
     public Lift(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
