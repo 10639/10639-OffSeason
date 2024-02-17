@@ -10,9 +10,9 @@ import java.util.List;
 public class BulkCache {
 
     private final HardwareMap hardwareMap;
-    List<LynxModule> allHubs;
-    LynxModule CONTROL_HUB;
-    LynxModule EXPANSION_HUB;
+    public List<LynxModule> allHubs;
+    public LynxModule CONTROL_HUB;
+    public LynxModule EXPANSION_HUB;
 
     public BulkCache(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;

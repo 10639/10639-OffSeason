@@ -33,9 +33,6 @@ public class OptimizedTele extends LinearOpMode {
     public static boolean scoreAllowed = false;
     public static boolean tiltBox = false;
 
-    LynxModule CONTROL_HUB;
-    LynxModule EXPANSION_HUB;
-
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -98,8 +95,8 @@ public class OptimizedTele extends LinearOpMode {
             }
 
             telemetry.addLine("--- Motor Voltages ---");
-            telemetry.addData("Control Hub Current (Amps)", CONTROL_HUB.getCurrent(CurrentUnit.AMPS));
-            telemetry.addData("Expansion Hub Current (Amps)", EXPANSION_HUB.getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("Control Hub Current (Amps)", bulkCache.CONTROL_HUB.getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("Expansion Hub Current (Amps)", bulkCache.EXPANSION_HUB.getCurrent(CurrentUnit.AMPS));
             telemetry.addData("Intake Current (Amps)", intakeSystem.sweeper.getCurrent(CurrentUnit.AMPS));
             telemetry.addData("Left Slide Current (Amps)", liftSystem.leftSlide.getCurrent(CurrentUnit.AMPS));
             telemetry.addData("Right Slide Current (Amps)", liftSystem.rightSlide.getCurrent(CurrentUnit.AMPS));
