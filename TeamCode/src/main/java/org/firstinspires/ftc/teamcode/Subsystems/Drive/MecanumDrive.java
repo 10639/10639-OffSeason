@@ -41,7 +41,6 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.OpModes.TeleOp.TeleOp;
 import org.firstinspires.ftc.teamcode.RoadRunner.Drawing;
 import org.firstinspires.ftc.teamcode.RoadRunner.Localizer;
 import org.firstinspires.ftc.teamcode.RoadRunner.ThreeDeadWheelLocalizer;
@@ -49,6 +48,7 @@ import org.firstinspires.ftc.teamcode.RoadRunner.messages.DriveCommandMessage;
 import org.firstinspires.ftc.teamcode.RoadRunner.messages.MecanumCommandMessage;
 import org.firstinspires.ftc.teamcode.RoadRunner.messages.MecanumEncodersMessage;
 import org.firstinspires.ftc.teamcode.RoadRunner.messages.PoseMessage;
+import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
 
 import java.lang.Math;
 import java.util.Arrays;
@@ -57,6 +57,8 @@ import java.util.List;
 
 @Config
 public final class MecanumDrive {
+
+    public double speedMultiplier = Constants.MIN_SPEED;
     public static class Params {
         // IMU orientation
         // TODO: fill in these values based on
@@ -93,6 +95,8 @@ public final class MecanumDrive {
         public double axialVelGain = 0.0;
         public double lateralVelGain = 0.0;
         public double headingVelGain = 0.0; // shared with turn
+
+
     }
 
     public static Params PARAMS = new Params();
@@ -474,7 +478,14 @@ public final class MecanumDrive {
         );
     }
 
-    public void loop(Gamepad gamepad, double speedMultiplier, Telemetry telemetry) {
+    public void loop(Gamepad gamepad, Telemetry telemetry) {
+
+
+        if (gamepad.left_bumper) {
+            speedMultiplier = Constants.MIN_SPEED;
+        } else if (gamepad.right_bumper) {
+            speedMultiplier = Constants.MAX_SPEED;
+        }
 
         setDrivePowers(new PoseVelocity2d(
                 new Vector2d(
@@ -487,6 +498,7 @@ public final class MecanumDrive {
         updatePoseEstimate();
 
         telemetry.addLine("--- Robot Pose ---");
+        telemetry.addData("[Speed Multiplier]: " , speedMultiplier);
         telemetry.addData("[X-Axis]: " , pose.position.x);
         telemetry.addData("[Y-Axis]: ", pose.position.y);
         telemetry.addData("[Heading (Degrees)]: ", Math.toDegrees(pose.heading.toDouble()));

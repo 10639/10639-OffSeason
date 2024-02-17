@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Subsystems.Scoring;
+package org.firstinspires.ftc.teamcode.Subsystems.Helpers;
 
 public class Constants {
 
@@ -36,7 +36,8 @@ public class Constants {
     // Feedforward component (F) -> Since we're doing this for a lift; we'll do a G value (gravity).
     //Refer to https://www.ctrlaltftc.com/feedforward-control#slide-gravity-feedforward
     public static final double Kf = 0.04;
-
+    public static final double MIN_SPEED = 0.5;
+    public static final double MAX_SPEED = 0.9;
 
 
     /** ======= CONSTANTS FOR ARM  ======= **/

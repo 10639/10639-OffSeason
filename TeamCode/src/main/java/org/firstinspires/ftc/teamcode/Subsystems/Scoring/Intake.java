@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
 
 
 public class Intake {
@@ -31,8 +32,6 @@ public class Intake {
         sweeper.setDirection(DcMotor.Direction.REVERSE);
         intake.scaleRange(0, 0.65);
         initIdle();
-        terminateBoxSweeper();
-        retractIntake();
     }
 
 //SWITCHED 1/13/24 MOTOR POSITIONS
@@ -53,6 +52,8 @@ public class Intake {
 
     public void initIdle() {
         terminateSweep();
+        terminateBoxSweeper();
+        retractIntake();
     }
 
     public void loop(Gamepad gamepad, Telemetry telemetry) {
@@ -76,6 +77,14 @@ public class Intake {
           terminateBoxSweeper();
       }
 
+        telemetry.addLine("--- Intake ---");
+        telemetry.addData("Front Sweeper", sweeper.getPower() == -1 ? "Sweeping" : sweeper.getPower() == 1 ? "Reverse Sweeping" : "Terminated");
+        telemetry.addData("Box Sweeper", boxSweeper.getPower() == -1 ? "Sweeping" : sweeper.getPower() == 1 ? "Reverse Sweeping" : "Terminated");
+        telemetry.addData("Front Intake", intake.getPosition() == 1 ? "Extended" : "Retracted");
+
+
     }
+
+
 }
 

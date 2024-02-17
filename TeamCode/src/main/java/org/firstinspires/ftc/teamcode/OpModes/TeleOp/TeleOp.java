@@ -13,9 +13,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Arm;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Intake;
-import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Constants;
+import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Box;
-import org.firstinspires.ftc.teamcode.Subsystems.Helpers;
+import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Helpers;
 
 import java.util.List;
 
@@ -36,16 +36,7 @@ public class TeleOp extends LinearOpMode {
     public static boolean scoreAllowed = false;
     public static boolean tiltBox = false;
 
-    public enum SpeedState {
-        NORMAL(0.5),
-        FAST(0.9);
-        double multiplier = 0.5; //Default
 
-        SpeedState(double value) {
-            this.multiplier = value;
-        }
-    }
-    SpeedState speedState;
     LynxModule CONTROL_HUB;
     LynxModule EXPANSION_HUB;
 
@@ -96,8 +87,6 @@ public class TeleOp extends LinearOpMode {
         scoreAllowed = false;
         tiltBox = false;
         target = 0;
-        speedState = SpeedState.NORMAL;
-
 
         telemetry.addLine("--- DriveTrain Initialized ---");
         telemetry.update();
@@ -108,13 +97,7 @@ public class TeleOp extends LinearOpMode {
             loopTime.reset();
             allHubs.forEach(LynxModule::clearBulkCache); //Reset Bulk Cache
 
-            if (gamepad1.left_bumper) {
-                speedState = SpeedState.NORMAL;
-            } else if (gamepad1.right_bumper) {
-                speedState = SpeedState.FAST;
-            }
-
-            driveTrain.loop(gamepad1, speedState.multiplier, telemetry);
+            driveTrain.loop(gamepad1, telemetry);
             armSystem.loop(gamepad2, telemetry);
             intakeSystem.loop(gamepad2, telemetry);
             pixelDetector.loop(telemetry);

@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Arm;
-import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Constants;
+import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
 
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "PIDFLift_Test")

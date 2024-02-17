@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Vision;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Constants;
+import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;

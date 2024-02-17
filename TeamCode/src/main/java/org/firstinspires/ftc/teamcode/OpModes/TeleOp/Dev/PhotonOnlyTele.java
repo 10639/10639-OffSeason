@@ -1,23 +1,19 @@
-package org.firstinspires.ftc.teamcode.OpModes.TeleOp;
+package org.firstinspires.ftc.teamcode.OpModes.TeleOp.Dev;
 
 
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.outoftheboxrobotics.photoncore.Photon;
-import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Arm;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Intake;
-import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Constants;
+import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Box;
-import org.firstinspires.ftc.teamcode.Subsystems.Helpers;
-
-import java.util.List;
+import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Helpers;
 
 @Photon
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "LoopTime_Test_Photon")
@@ -35,18 +31,6 @@ public class PhotonOnlyTele extends LinearOpMode {
     public static boolean rightSlideRest = true;
     public static boolean scoreAllowed = false;
     public static boolean tiltBox = false;
-
-    public enum SpeedState {
-        NORMAL(0.5),
-        FAST(0.9);
-        double multiplier = 0.5; //Default
-
-        SpeedState(double value) {
-            this.multiplier = value;
-        }
-    }
-    SpeedState speedState;
-
 
 
     @Override
@@ -81,7 +65,6 @@ public class PhotonOnlyTele extends LinearOpMode {
         scoreAllowed = false;
         tiltBox = false;
         target = 0;
-        speedState = SpeedState.NORMAL;
 
 
         telemetry.addLine("--- DriveTrain Initialized ---");
@@ -92,13 +75,7 @@ public class PhotonOnlyTele extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
             loopTime.reset();
 
-            if (gamepad1.left_bumper) {
-                speedState = SpeedState.NORMAL;
-            } else if (gamepad1.right_bumper) {
-                speedState = SpeedState.FAST;
-            }
-
-            driveTrain.loop(gamepad1, speedState.multiplier, telemetry);
+            driveTrain.loop(gamepad1, telemetry);
             armSystem.loop(gamepad2, telemetry);
             intakeSystem.loop(gamepad2, telemetry);
             pixelDetector.loop(telemetry);

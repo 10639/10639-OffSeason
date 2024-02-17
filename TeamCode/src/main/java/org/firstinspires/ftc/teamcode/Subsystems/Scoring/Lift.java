@@ -4,21 +4,17 @@ package org.firstinspires.ftc.teamcode.Subsystems.Scoring;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.PwmControl;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoImpl;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
 
 public class Lift {
 
     private final HardwareMap hardwareMap;
     public DcMotorEx leftSlide, rightSlide;
     public PIDController controller;
-
+    private double pid;
     public Lift(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
     }
@@ -39,11 +35,10 @@ public class Lift {
         leftSlide.setDirection(DcMotor.Direction.FORWARD);
     }
 
-
     public void loop(int target, Telemetry telemetry) {
         controller.setPID(Constants.Kp, Constants.Ki, Constants.Kd);
         int leftPosition = leftSlide.getCurrentPosition();
-        double pid = controller.calculate(leftPosition, target);
+        pid = controller.calculate(leftPosition, target);
         double power = pid + Constants.Kf;
         if (pid < 0) { // Going down
             power = Math.max(power, Constants.MAX_DOWN_VELO);
@@ -59,5 +54,8 @@ public class Lift {
         telemetry.addData("Right Slide Position", rightSlide.getCurrentPosition());
         telemetry.addData("Power Allocated", power);
 
+    }
+    public double getPid() {
+        return pid;
     }
 }
