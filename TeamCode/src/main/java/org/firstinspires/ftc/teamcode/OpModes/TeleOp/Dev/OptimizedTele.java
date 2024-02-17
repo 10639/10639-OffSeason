@@ -9,8 +9,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Cache;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Arm;
-import org.firstinspires.ftc.teamcode.Subsystems.Helpers.BulkCache;
+import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Cache;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Box;
@@ -21,7 +22,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Lift;
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Optimized_Tele")
 public class OptimizedTele extends LinearOpMode {
 
-    public BulkCache bulkCache;
+    public Cache bulkCache;
     public MecanumDrive driveTrain;
     public Lift liftSystem;
     public Arm armSystem;
@@ -38,7 +39,7 @@ public class OptimizedTele extends LinearOpMode {
 
 
         ElapsedTime loopTime = new ElapsedTime();
-        bulkCache = new BulkCache(hardwareMap);
+        bulkCache = new Cache(hardwareMap);
         driveTrain = new MecanumDrive(hardwareMap, Helpers.defaultTelePose);
         liftSystem = new Lift(hardwareMap);
         armSystem = new Arm(hardwareMap);

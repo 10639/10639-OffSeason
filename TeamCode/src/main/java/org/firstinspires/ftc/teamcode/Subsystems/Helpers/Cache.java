@@ -7,14 +7,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.List;
 
-public class BulkCache {
+public class Cache {
 
     private final HardwareMap hardwareMap;
     public List<LynxModule> allHubs;
     public LynxModule CONTROL_HUB;
     public LynxModule EXPANSION_HUB;
 
-    public BulkCache(HardwareMap hardwareMap) {
+    public Cache(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
     }
 
