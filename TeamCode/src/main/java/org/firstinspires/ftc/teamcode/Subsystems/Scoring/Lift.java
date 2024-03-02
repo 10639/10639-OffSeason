@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Scoring;
 
+import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.InstantAction;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -15,8 +19,11 @@ public class Lift {
     public DcMotorEx leftSlide, rightSlide;
     private PIDController controller;
     private double pid;
+    public int target;
+
     public Lift(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
+        this.target = 0;
     }
 
     public void init() {
@@ -33,9 +40,10 @@ public class Lift {
         leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftSlide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         leftSlide.setDirection(DcMotor.Direction.FORWARD);
+        target = 0;
     }
 
-    public void loop(int target, Telemetry telemetry) {
+    public void loop(Telemetry telemetry) {
         controller.setPID(Constants.Kp, Constants.Ki, Constants.Kd);
         int leftPosition = leftSlide.getCurrentPosition();
         pid = controller.calculate(leftPosition, target);
@@ -54,8 +62,52 @@ public class Lift {
         telemetry.addData("Right Slide Position", rightSlide.getCurrentPosition());
         telemetry.addData("Power Allocated", power);
 
+
     }
+
+    //Methods
+
+    public void updateTarget(int newTarget) {
+        target = newTarget;
+    }
+
     public double getPid() {
         return pid;
     }
+
+    public int getTarget() {
+        return target;
+    }
+
+    //Actions
+
+    public Action updateTargetPos(int newTarget) {
+        return t -> {
+            target = newTarget;
+            return false;
+        };
+    }
+    public Action update(Arm armSystem, Telemetry telemetry) {
+        return t -> {
+            loop(telemetry);
+            double leftSlidePosition = leftSlide.getCurrentPosition();
+            if (leftSlidePosition > 15) {
+                if(!(Arm.AUTON_SCORING) || getPid() < 0) {
+                    armSystem.armIdle();
+                }
+            }
+
+            if ((getTarget() == 0)) { //Properly De-Power Arm/Box
+                armSystem.armIdle();
+                if (leftSlidePosition < 2 && leftSlidePosition >= -1) {
+                    armSystem.dePower();
+                }
+            }
+            return true; // this returns true to make it loop forever; use RaceParallelCommand
+        };
+    }
+
+
+
+
 }

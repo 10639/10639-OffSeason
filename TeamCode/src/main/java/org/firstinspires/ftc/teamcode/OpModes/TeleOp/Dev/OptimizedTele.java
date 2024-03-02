@@ -27,8 +27,9 @@ public class OptimizedTele extends LinearOpMode {
     public Intake intakeSystem;
     public Box pixelDetector;
 
-    public static double leftSlidePosition = 0;
+
     public static int target = 0;
+    public static double leftSlidePosition = 0;
     public static boolean scoreAllowed = false;
     public static boolean tiltBox = false;
 
@@ -52,7 +53,6 @@ public class OptimizedTele extends LinearOpMode {
 
         tiltBox = false;
         scoreAllowed = false;
-        target = 0;
         leftSlidePosition = 0;
 
         telemetry.addLine("--- DriveTrain Initialized ---");
@@ -69,7 +69,8 @@ public class OptimizedTele extends LinearOpMode {
             intakeSystem.loop(gamepad2, telemetry);
             pixelDetector.loop(telemetry);
             updateLiftTargets(gamepad1);
-            liftSystem.loop(target, telemetry);
+            liftSystem.loop(telemetry);
+            target = liftSystem.getTarget();
             leftSlidePosition = liftSystem.leftSlide.getCurrentPosition();
 
             if (leftSlidePosition > 15) {
@@ -112,13 +113,13 @@ public class OptimizedTele extends LinearOpMode {
 
     public void updateLiftTargets(Gamepad gamepad) {
         if (gamepad.square) {
-            target = Constants.LIFT_FIRST_LEVEL;
+            liftSystem.updateTarget(Constants.LIFT_FIRST_LEVEL);
         } else if (gamepad.triangle) {
-            target = Constants.LIFT_SECOND_LEVEL;
+            liftSystem.updateTarget(Constants.LIFT_SECOND_LEVEL);
         } else if (gamepad.circle) {
-            target = Constants.LIFT_THIRD_LEVEL;
+            liftSystem.updateTarget(Constants.LIFT_THIRD_LEVEL);
         } else if (gamepad.cross) {
-            target = Constants.LIFT_LEVEL_ZERO;
+            liftSystem.updateTarget(Constants.LIFT_LEVEL_ZERO);
         }
     }
 

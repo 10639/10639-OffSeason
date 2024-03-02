@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Scoring;
 
 
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
@@ -17,6 +18,7 @@ public class Arm {
     public Arm(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
     }
+    public static boolean AUTON_SCORING; //Used to check if the box is currently in a scoring mode for macro verification in auto
 
     public void init() {
          leftPivot = hardwareMap.get(ServoImplEx.class, "leftPivot");
@@ -42,11 +44,34 @@ public class Arm {
     public void dePower() {
         leftPivot.setPwmDisable();
         rightPivot.setPwmDisable();
+        AUTON_SCORING = false;
     }
 
     public void loop(Gamepad gamepad, Telemetry telemetry) {
+        //Empty for now
+    }
 
+    public Action Arm_IDLE() {
+        return t -> {
+            armIdle();
+            AUTON_SCORING = false;
+            return false;
+        };
+    }
 
+    public Action Arm_SCORE() {
+        return t -> {
+            armScore();
+            AUTON_SCORING = true;
+            return false;
+        };
+    }
 
+    public Action Arm_DEPOWER() {
+        return t -> {
+            dePower();
+            AUTON_SCORING = false;
+            return false;
+        };
     }
 }

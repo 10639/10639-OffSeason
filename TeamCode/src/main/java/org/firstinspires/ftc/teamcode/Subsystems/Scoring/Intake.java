@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Scoring;
 
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -33,8 +37,6 @@ public class Intake {
         intake.scaleRange(0, 0.65);
         initIdle();
     }
-
-//SWITCHED 1/13/24 MOTOR POSITIONS
 
     public void Sweep() { sweeper.setPower(Constants.Sweep); }
     public void reverseSweep() { sweeper.setPower(Constants.reverseSweep); }
@@ -84,6 +86,24 @@ public class Intake {
 
 
     }
+
+
+    public Action BoxIntake_SWEEPOUT() {
+        return t -> {
+            boxSweeper.setPower(0.5);
+            return false;
+        };
+    }
+
+    public Action BoxIntake_TERMINATE() {
+        return t -> {
+            boxSweeper.setPower(0);
+            return false;
+        };
+    }
+
+
+
 
 
 }
