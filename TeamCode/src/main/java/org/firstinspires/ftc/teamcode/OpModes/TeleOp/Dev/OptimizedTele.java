@@ -27,7 +27,6 @@ public class OptimizedTele extends LinearOpMode {
     public Intake intakeSystem;
     public Box pixelDetector;
 
-
     public static int target = 0;
     public static double leftSlidePosition = 0;
     public static boolean scoreAllowed = false;
@@ -36,7 +35,6 @@ public class OptimizedTele extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-
         ElapsedTime loopTime = new ElapsedTime();
         bulkCache = new Cache(hardwareMap);
         driveTrain = new MecanumDrive(hardwareMap, Helpers.defaultTelePose);
@@ -44,12 +42,7 @@ public class OptimizedTele extends LinearOpMode {
         armSystem = new Arm(hardwareMap);
         intakeSystem = new Intake(hardwareMap);
         pixelDetector = new Box(hardwareMap);
-
-        bulkCache.init();
-        liftSystem.init();
-        armSystem.init();
-        intakeSystem.init();
-        pixelDetector.init();
+        initializeSubsystems();
 
         tiltBox = false;
         scoreAllowed = false;
@@ -61,8 +54,7 @@ public class OptimizedTele extends LinearOpMode {
         waitForStart();
         if (isStopRequested()) return;
         while (opModeIsActive() && !isStopRequested()) {
-            loopTime.reset();
-            bulkCache.loop(telemetry); //Reset Bulk Cache
+            loopTime.reset(); bulkCache.loop(telemetry); //Reset Bulk Cache
 
             driveTrain.loop(gamepad1, telemetry);
             armSystem.loop(gamepad2, telemetry);
@@ -70,48 +62,22 @@ public class OptimizedTele extends LinearOpMode {
             pixelDetector.loop(telemetry);
             updateLiftTargets(gamepad1);
             liftSystem.loop(telemetry);
-            target = liftSystem.getTarget();
-            leftSlidePosition = liftSystem.leftSlide.getCurrentPosition();
 
-            if (leftSlidePosition > 15) {
-                scoreAllowed = true;
-                if(!tiltBox || liftSystem.getPid() < 0) {
-                    armSystem.armIdle();
-                }
-            }
-
-            if ((gamepad2.cross || gamepad2.triangle) && scoreAllowed) {
-                tiltBox = true;
-                armSystem.armScore();
-            }
-
-            if ((target == 0)) { //Properly De-Power Arm/Box
-                armSystem.armIdle();
-                scoreAllowed = false;
-                tiltBox = false;
-                if (leftSlidePosition < 2 && leftSlidePosition >= -1) {
-                    armSystem.dePower();
-                }
-            }
-
-            telemetry.addLine("--- Motor Voltages ---");
-            telemetry.addData("Control Hub Current (Amps)", bulkCache.CONTROL_HUB.getCurrent(CurrentUnit.AMPS));
-            telemetry.addData("Expansion Hub Current (Amps)", bulkCache.EXPANSION_HUB.getCurrent(CurrentUnit.AMPS));
-            telemetry.addData("Intake Current (Amps)", intakeSystem.sweeper.getCurrent(CurrentUnit.AMPS));
-            telemetry.addData("Left Slide Current (Amps)", liftSystem.leftSlide.getCurrent(CurrentUnit.AMPS));
-            telemetry.addData("Right Slide Current (Amps)", liftSystem.rightSlide.getCurrent(CurrentUnit.AMPS));
-
-            double loopTimeMs = loopTime.milliseconds();
-            telemetry.addLine("--- Loop Times ---");
-            telemetry.addData("loopTimeMs", loopTimeMs);
-            telemetry.addData("loopTimeHz", 1000.0 / loopTimeMs);
-            telemetry.update();
+            handleScoringConditions();
+            logTelemetry(loopTime);
 
         }
-
     }
 
-    public void updateLiftTargets(Gamepad gamepad) {
+    private void initializeSubsystems() {
+        bulkCache.init();
+        liftSystem.init();
+        armSystem.init();
+        intakeSystem.init();
+        pixelDetector.init();
+    }
+
+    private void updateLiftTargets(Gamepad gamepad) {
         if (gamepad.square) {
             liftSystem.updateTarget(Constants.LIFT_FIRST_LEVEL);
         } else if (gamepad.triangle) {
@@ -121,6 +87,48 @@ public class OptimizedTele extends LinearOpMode {
         } else if (gamepad.cross) {
             liftSystem.updateTarget(Constants.LIFT_LEVEL_ZERO);
         }
+    }
+
+    private void handleScoringConditions() {
+        target = liftSystem.getTarget();
+        leftSlidePosition = liftSystem.leftSlide.getCurrentPosition();
+
+        if (leftSlidePosition > 15) {
+            scoreAllowed = true;
+            if (!tiltBox || liftSystem.getPid() < 0) {
+                armSystem.armIdle();
+            }
+        }
+
+        if ((gamepad2.cross || gamepad2.triangle) && scoreAllowed) {
+            tiltBox = true;
+            armSystem.armScore();
+        }
+
+        if (target == 0) {
+            scoreAllowed = false;
+            tiltBox = false;
+            if(leftSlidePosition > 15) {
+                armSystem.armIdle();
+            } else if (leftSlidePosition < 2 && leftSlidePosition >= -1) {
+                armSystem.dePower();
+            }
+        }
+    }
+
+    private void logTelemetry(ElapsedTime loopTime) {
+        telemetry.addLine("--- Motor Voltages ---");
+        telemetry.addData("Control Hub Current (Amps)", bulkCache.CONTROL_HUB.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Expansion Hub Current (Amps)", bulkCache.EXPANSION_HUB.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Intake Current (Amps)", intakeSystem.sweeper.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Left Slide Current (Amps)", liftSystem.leftSlide.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Right Slide Current (Amps)", liftSystem.rightSlide.getCurrent(CurrentUnit.AMPS));
+
+        double loopTimeMs = loopTime.milliseconds();
+        telemetry.addLine("--- Loop Times ---");
+        telemetry.addData("loopTimeMs", loopTimeMs);
+        telemetry.addData("loopTimeHz", 1000.0 / loopTimeMs);
+        telemetry.update();
     }
 
 }

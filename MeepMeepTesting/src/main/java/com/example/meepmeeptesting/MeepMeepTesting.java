@@ -52,6 +52,7 @@ public class MeepMeepTesting {
         rightScoringVector = new Vector2d(backBoard_X, (rightRetractPos.position.y) - 11);
 
         parkingPose = new Vector2d(backBoard_X,58);
+        Pose2d test = new Pose2d(36 ,58, initPose.heading.toDouble());
 
 
         myBot.runAction(myBot.getDrive().actionBuilder(initPose)
@@ -61,9 +62,14 @@ public class MeepMeepTesting {
                 .strafeTo(new Vector2d( (centerRetractPos.position.x) + 4 , centerRetractPos.position.y))
                 .setReversed(true)
                 .splineTo(centerScoringVector, Math.toRadians(0))
-                .strafeToConstantHeading(parkingPose)
+                .waitSeconds(1)
+                .waitSeconds(1)
+                .waitSeconds(1)
+                .waitSeconds(1)
                 .setReversed(false)
-                .lineToX(backBoard_X + 15)
+                .splineToConstantHeading(new Vector2d(backBoard_X - 2,60), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(backBoard_X,60), Math.toRadians(0))
+                .waitSeconds(0.5)
                 .build());
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)

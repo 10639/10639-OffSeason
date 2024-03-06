@@ -80,7 +80,6 @@ public class Lift {
     }
 
     //Actions
-
     public Action updateTargetPos(int newTarget) {
         return t -> {
             target = newTarget;
@@ -92,14 +91,15 @@ public class Lift {
             loop(telemetry);
             double leftSlidePosition = leftSlide.getCurrentPosition();
             if (leftSlidePosition > 15) {
-                if(!(Arm.AUTON_SCORING) || getPid() < 0) {
+                if( (!(Arm.AUTON_SCORING) || getPid() < 0)) {
                     armSystem.armIdle();
                 }
             }
 
             if ((getTarget() == 0)) { //Properly De-Power Arm/Box
-                armSystem.armIdle();
-                if (leftSlidePosition < 2 && leftSlidePosition >= -1) {
+                if(leftSlidePosition > 15) {
+                    armSystem.armIdle();
+                } else if (leftSlidePosition < 2 && leftSlidePosition >= -1) {
                     armSystem.dePower();
                 }
             }

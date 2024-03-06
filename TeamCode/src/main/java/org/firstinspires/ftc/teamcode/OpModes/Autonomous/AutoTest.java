@@ -60,22 +60,15 @@ public class AutoTest extends LinearOpMode {
         Camera = new Webcam(hardwareMap);
         pipeline = new Pipeline(telemetry);
 
-        liftSystem.init();
-        armSystem.init();
-        intakeSystem.init();
-        pixelDetector.init();
-        Camera.init();
-
+        initializeSubsystems();
         Pipeline.Location location = Pipeline.Location.RIGHT;
+        Camera.device.setPipeline(pipeline);
 
         rightSlideRest = true;
         scoreAllowed = false;
         tiltBox = false;
 
-        Camera.device.setPipeline(pipeline);
-
         trajecBuilder.calculatePoses("BLUE", "LEFT", telemetry);
-
         trajecBuilder.trajLeft = driveTrain.actionBuilder(trajecBuilder.initPose)
                 .setReversed(true)
                 .splineTo(trajecBuilder.midwayVector, Math.toRadians(-90))
@@ -195,6 +188,14 @@ public class AutoTest extends LinearOpMode {
             }
 
         }
+
+    private void initializeSubsystems() {
+        liftSystem.init();
+        armSystem.init();
+        intakeSystem.init();
+        pixelDetector.init();
+        Camera.init();
+    }
 
 
 
