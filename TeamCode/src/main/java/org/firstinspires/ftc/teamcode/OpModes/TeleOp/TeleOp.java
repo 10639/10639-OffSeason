@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.OpModes.TeleOp;
 
 
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -19,7 +18,6 @@ import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Helpers;
 
 import java.util.List;
 
-@Photon
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "OffSeason_TeleOp")
 public class TeleOp extends LinearOpMode {
 
@@ -50,9 +48,6 @@ public class TeleOp extends LinearOpMode {
         //This should get us faster responses as we have control over when the cache resets.
 
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
-        for (LynxModule module : allHubs) {
-            module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-        }
         CONTROL_HUB = allHubs.get(0);
         EXPANSION_HUB = allHubs.get(1);
         //Debugging purposes ^ -- We can telemetry log the AMPs from each sensor/motor to see if a specific motor is draining too much power

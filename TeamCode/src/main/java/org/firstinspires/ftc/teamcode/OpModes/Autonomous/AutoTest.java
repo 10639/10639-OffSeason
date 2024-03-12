@@ -8,7 +8,6 @@ import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
-import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -24,7 +23,6 @@ import org.firstinspires.ftc.teamcode.Subsystems.Trajectories.Builder;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.Pipeline;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.Webcam;
 
-@Photon
 @Autonomous(name = "🟦 Left Backdrop [Dev Auto]", preselectTeleOp = "CenterStage_TeleOp")
 public class AutoTest extends LinearOpMode {
 
