@@ -66,11 +66,11 @@ public class MeepMeepTesting {
                 .waitSeconds(1)
                 .waitSeconds(1)
                 .waitSeconds(1)
-                .setReversed(false)
                 .splineToConstantHeading(new Vector2d(backBoard_X - 2,60), Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(backBoard_X,60), Math.toRadians(0))
                 .waitSeconds(0.5)
                 .build());
+
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
                 .setDarkMode(true)

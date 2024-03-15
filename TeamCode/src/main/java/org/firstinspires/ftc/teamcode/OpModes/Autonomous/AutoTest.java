@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Trajectories.Builder;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.Pipeline;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.Webcam;
 
-@Autonomous(name = "🟦 Left Backdrop [Dev Auto]", preselectTeleOp = "CenterStage_TeleOp")
+@Autonomous(name = "🟦 Left Backdrop [WIP]", preselectTeleOp = "CenterStage_TeleOp")
 public class AutoTest extends LinearOpMode {
 
     public MecanumDrive driveTrain;
@@ -33,23 +33,10 @@ public class AutoTest extends LinearOpMode {
     public Box pixelDetector;
     public Webcam Camera;
     public Builder trajecBuilder;
-    Pipeline pipeline;
-
-
-    public static boolean rightSlideRest = true;
-    public static boolean scoreAllowed = false;
-    public static boolean tiltBox = false;
-
-    enum autoState {
-        SCORE,
-        IDLE
-    }
-
-    autoState currentState = autoState.IDLE;
+    public Pipeline pipeline;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        ElapsedTime loopTime = new ElapsedTime();
         driveTrain = new MecanumDrive(hardwareMap, Helpers.defaultTelePose);
         liftSystem = new Lift(hardwareMap);
         armSystem = new Arm(hardwareMap);
@@ -57,16 +44,13 @@ public class AutoTest extends LinearOpMode {
         pixelDetector = new Box(hardwareMap);
         Camera = new Webcam(hardwareMap);
         pipeline = new Pipeline(telemetry);
+        trajecBuilder = new Builder("BLUE", "LEFT");
 
         initializeSubsystems();
         Pipeline.Location location = Pipeline.Location.RIGHT;
         Camera.device.setPipeline(pipeline);
 
-        rightSlideRest = true;
-        scoreAllowed = false;
-        tiltBox = false;
-
-        trajecBuilder.calculatePoses("BLUE", "LEFT", telemetry);
+        trajecBuilder.calculatePoses(telemetry);
         trajecBuilder.trajLeft = driveTrain.actionBuilder(trajecBuilder.initPose)
                 .setReversed(true)
                 .splineTo(trajecBuilder.midwayVector, Math.toRadians(-90))
@@ -160,7 +144,6 @@ public class AutoTest extends LinearOpMode {
             telemetry.update();
         }
         waitForStart();
-        currentState = autoState.SCORE;
 
         //Built-in opModeIsActive check inside of runBlocking() so no need to double loop it by moving this inside of our opModeIsActive loop.
         Actions.runBlocking(new Helpers.RaceParallelCommand(
@@ -173,19 +156,7 @@ public class AutoTest extends LinearOpMode {
         ));
         Camera.stopStream();
 
-        while(!isStopRequested() && opModeIsActive()) {
-            loopTime.reset();
-
-            double loopTimeMs = loopTime.milliseconds();
-            telemetry.addLine("--- Loop Times ---");
-            telemetry.addData("loopTimeMs", loopTimeMs);
-            telemetry.addData("loopTimeHz", 1000.0 / loopTimeMs);
-            telemetry.update();
-
-
-            }
-
-        }
+    }
 
     private void initializeSubsystems() {
         liftSystem.init();
@@ -194,10 +165,4 @@ public class AutoTest extends LinearOpMode {
         pixelDetector.init();
         Camera.init();
     }
-
-
-
-
-
 }
-

@@ -3,11 +3,20 @@ package org.firstinspires.ftc.teamcode.Subsystems.Trajectories;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
 public class Builder {
 
+    public Action trajCenter;
+    public Action trajLeft;
+    public Action trajRight;
+    public Action trajDev;
+
+    public String alliance;
+    public String side;
     public Pose2d initPose;
 
     public Pose2d centerRetractPos;
@@ -27,11 +36,12 @@ public class Builder {
     public Vector2d parkingPose;
     public double backBoard_X = 48;
 
-    public Action trajCenter;
-    public Action trajLeft;
-    public Action trajRight;
 
-    public void calculatePoses(String alliance, String side, Telemetry telemetry) {
+    public Builder(String alliance, String side) {
+        this.alliance = alliance;
+        this.side = side;
+    }
+    public void calculatePoses(Telemetry telemetry) {
 
         switch(alliance) {
             case "BLUE":

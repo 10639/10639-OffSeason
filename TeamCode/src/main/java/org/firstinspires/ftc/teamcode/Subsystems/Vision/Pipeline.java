@@ -26,7 +26,6 @@ public class Pipeline extends OpenCvPipeline {
     Rect midRect = new Rect(500, 75, 350, 200);
 
     double PERCENT_THRESHOLD = Constants.CONFIDENCE; // define our threshold
-    private int finalAnswer;
     Scalar red = new Scalar(255, 0, 0); // define what the color of the rectangle outline is that appears on the output (red)
 
     public enum Location {
@@ -54,10 +53,10 @@ public class Pipeline extends OpenCvPipeline {
         Mat left = mat.submat(leftRect);
 
         double midValue = Core.sumElems(middle).val[0] / midRect.area() / 255;
-        double rightValue = Core.sumElems(left).val[0] / leftRect.area() / 255;
+        double letftValue = Core.sumElems(left).val[0] / leftRect.area() / 255;
 
         telemetry.addData("Middle percentage value", midValue);
-        telemetry.addData("Right percentage value", rightValue);
+        telemetry.addData("Left percentage value", letftValue);
 
         left.release();
         middle.release();
@@ -66,9 +65,9 @@ public class Pipeline extends OpenCvPipeline {
         Imgproc.rectangle(mat, leftRect, red, 2);
         Imgproc.rectangle(mat, midRect, red, 2);
 
-        if (rightValue > PERCENT_THRESHOLD || midValue > PERCENT_THRESHOLD){
-            if(rightValue > midValue) {
-                location = Pipeline.Location.RIGHT;
+        if (letftValue > PERCENT_THRESHOLD || midValue > PERCENT_THRESHOLD){
+            if(letftValue > midValue) {
+                location = Pipeline.Location.LEFT;
                 telemetry.addData("Location", "Left");
                 Imgproc.rectangle(mat, leftRect, new Scalar(0, 255, 0), 2); // change the rectangle of the detected position to green
             } else {
