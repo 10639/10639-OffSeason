@@ -60,7 +60,7 @@ public class AutoTest extends LinearOpMode {
                 .splineTo(trajecBuilder.leftScoringVector, Math.toRadians(0))
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
-                        liftSystem.updateTargetPos(Constants.LIFT_FIRST_LEVEL),
+                        liftSystem.setSlideAction(Constants.LIFT_FIRST_LEVEL),
                         armSystem.Arm_IDLE()
                 ))
                 .waitSeconds(1)
@@ -70,7 +70,7 @@ public class AutoTest extends LinearOpMode {
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
                         intakeSystem.BoxIntake_TERMINATE(),
-                        liftSystem.updateTargetPos(Constants.LIFT_LEVEL_ZERO),
+                        liftSystem.setSlideAction(Constants.LIFT_LEVEL_ZERO),
                         armSystem.Arm_IDLE()
                 ))
                 .strafeToConstantHeading(trajecBuilder.parkingPose)
@@ -89,7 +89,7 @@ public class AutoTest extends LinearOpMode {
                 .splineTo(trajecBuilder.centerScoringVector, Math.toRadians(0))
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
-                        liftSystem.updateTargetPos(Constants.LIFT_FIRST_LEVEL),
+                        liftSystem.setSlideAction(Constants.LIFT_FIRST_LEVEL),
                         armSystem.Arm_IDLE()
                 ))
                 .waitSeconds(1)
@@ -99,7 +99,7 @@ public class AutoTest extends LinearOpMode {
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
                         intakeSystem.BoxIntake_TERMINATE(),
-                        liftSystem.updateTargetPos(Constants.LIFT_LEVEL_ZERO),
+                        liftSystem.setSlideAction(Constants.LIFT_LEVEL_ZERO),
                         armSystem.Arm_IDLE()
                 ))
                 .strafeToConstantHeading(trajecBuilder.parkingPose)
@@ -117,7 +117,7 @@ public class AutoTest extends LinearOpMode {
                 .splineTo(trajecBuilder.rightScoringVector, Math.toRadians(0))
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
-                        liftSystem.updateTargetPos(Constants.LIFT_FIRST_LEVEL),
+                        liftSystem.setSlideAction(Constants.LIFT_FIRST_LEVEL),
                         armSystem.Arm_IDLE()
                 ))
                 .waitSeconds(1)
@@ -127,7 +127,7 @@ public class AutoTest extends LinearOpMode {
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
                         intakeSystem.BoxIntake_TERMINATE(),
-                        liftSystem.updateTargetPos(Constants.LIFT_LEVEL_ZERO),
+                        liftSystem.setSlideAction(Constants.LIFT_LEVEL_ZERO),
                         armSystem.Arm_IDLE()
                 ))
                 .strafeToConstantHeading(trajecBuilder.parkingPose)

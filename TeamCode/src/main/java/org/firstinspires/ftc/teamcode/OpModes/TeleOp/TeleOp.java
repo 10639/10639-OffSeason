@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Helpers;
 
 import java.util.List;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "OffSeason_TeleOp")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Old_TeleOp")
 public class TeleOp extends LinearOpMode {
 
 
@@ -113,10 +113,10 @@ public class TeleOp extends LinearOpMode {
             double pid = controller.calculate(leftPosition, target);
             double power = pid + Constants.Kf;
             if (pid < 0) { // Going down
-                power = Math.max(power, Constants.MAX_DOWN_VELO);
+                power = Math.max(power, Constants.MAX_LIFT_TERMINAL_VELO);
                 scoreAllowed = false;
             } else { //Going up
-                power = Math.min(power, Constants.MAX_UP_VELO); //Power Range 0 -> 0.8;
+                power = Math.min(power, Constants.MAX_LIFT_VELO); //Power Range 0 -> 0.8;
             }
             leftSlide.setPower(power);
             rightSlide.setPower(power);

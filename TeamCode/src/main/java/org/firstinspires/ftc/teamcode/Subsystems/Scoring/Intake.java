@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
 
 
@@ -83,10 +84,12 @@ public class Intake {
         telemetry.addData("Front Sweeper", sweeper.getPower() == -1 ? "Sweeping" : sweeper.getPower() == 1 ? "Reverse Sweeping" : "Terminated");
         telemetry.addData("Box Sweeper", boxSweeper.getPower() == -1 ? "Sweeping" : sweeper.getPower() == 1 ? "Reverse Sweeping" : "Terminated");
         telemetry.addData("Front Intake", intake.getPosition() == 1 ? "Extended" : "Retracted");
+        telemetry.addData("Front Sweeper Current (Amps)", sweeper.getCurrent(CurrentUnit.AMPS));
 
 
     }
 
+    //Actions for Autonomous
 
     public Action BoxIntake_SWEEPOUT() {
         return t -> {

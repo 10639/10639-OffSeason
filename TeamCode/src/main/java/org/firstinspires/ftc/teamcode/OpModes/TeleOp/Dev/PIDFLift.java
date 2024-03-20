@@ -23,7 +23,6 @@ public class PIDFLift extends OpMode {
     //Possible Value for P: 0.1;
     //Possible Value for D: 0.00001;
     public static double f = 0.12; //Possible Value 0.12;
-    public static boolean rightSlideRest = true;
 
 
     @Override
@@ -45,7 +44,6 @@ public class PIDFLift extends OpMode {
         leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftSlide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         leftSlide.setDirection(DcMotor.Direction.FORWARD);
-        rightSlideRest = true;
     }
 
     @Override
@@ -58,29 +56,24 @@ public class PIDFLift extends OpMode {
         if (pid < 0) { // Going down
             power = Math.max(power, -0.1);
         } else { //Going up
-            power = Math.min(power, 0.8); //Power Range 0 -> 1;
+            power = Math.min(power, 1.0); //Power Range 0 -> 1;
         }
         leftSlide.setPower(power);
         rightSlide.setPower(power);
-        if (leftSlide.getCurrentPosition() > 15) {
-            rightSlideRest = false;
-        }
-        if (pid < 0) {
-            armSystem.armIdle();
-        }
-
-        if ((target == 0)) { //Ensure Lifts are Fully Down (Observation: Right Slide Mainly Issues)
-            armSystem.armIdle();
-            if (leftSlide.getCurrentPosition() < 2 || (leftSlide.getCurrentPosition() < 0 && leftSlide.getCurrentPosition() >= -1)) {
-                armSystem.dePower();
-            } else if (leftSlide.getCurrentPosition() > 2 || leftSlide.getCurrentPosition() < 0) {
-                while (leftSlide.getCurrentPosition() > 2 || leftSlide.getCurrentPosition() < 0) {
-                    leftSlide.setPower((Math.signum(leftSlide.getCurrentPosition() * -1) * 0.3));
-                }
-                armSystem.dePower();
+        double leftSlidePosition = leftSlide.getCurrentPosition();
+        if (leftSlidePosition > 15) {
+            if( (!(Arm.AUTON_SCORING) || pid < 0)) {
+                armSystem.armIdle();
             }
         }
 
+        if (target == 0) { //Properly De-Power Arm/Box
+            if(leftSlidePosition > 15) {
+                armSystem.armIdle();
+            } else if (leftSlidePosition < 2 && leftSlidePosition >= -1) {
+                armSystem.dePower();
+            }
+        }
 
         telemetry.addData("leftPos", leftPosition);
         telemetry.addData("rightPos", rightSlide.getCurrentPosition());
@@ -88,7 +81,6 @@ public class PIDFLift extends OpMode {
         telemetry.addData("Calculated PID", pid);
         telemetry.addData("Slides Power", power);
         telemetry.addData("Slide Direction:", pid < 0 ? "Down" : "Up");
-        telemetry.addData("Right Slide @ Rest", rightSlideRest);
         telemetry.update();
 
     }

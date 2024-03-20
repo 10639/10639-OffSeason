@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
 
 public class Lift {
@@ -49,9 +50,9 @@ public class Lift {
         pid = controller.calculate(leftPosition, target);
         double power = pid + Constants.Kf;
         if (pid < 0) { // Going down
-            power = Math.max(power, Constants.MAX_DOWN_VELO);
+            power = Math.max(power, Constants.MAX_LIFT_TERMINAL_VELO);
         } else { //Going up
-            power = Math.min(power, Constants.MAX_UP_VELO); //Power Range 0 -> 0.8;
+            power = Math.min(power, Constants.MAX_LIFT_VELO); //Power Range 0 -> 0.8;
         }
         leftSlide.setPower(power);
         rightSlide.setPower(power);
@@ -60,14 +61,17 @@ public class Lift {
         telemetry.addData("Slides Target", target);
         telemetry.addData("Left Slide Position", leftPosition);
         telemetry.addData("Right Slide Position", rightSlide.getCurrentPosition());
+        telemetry.addData("Left Slide Current (Amps)", leftSlide.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Right Slide Current (Amps)", rightSlide.getCurrent(CurrentUnit.AMPS));
         telemetry.addData("Power Allocated", power);
+
 
 
     }
 
     //Methods
 
-    public void updateTarget(int newTarget) {
+    public void setSlideTarget(int newTarget) {
         target = newTarget;
     }
 
@@ -75,12 +79,14 @@ public class Lift {
         return pid;
     }
 
-    public int getTarget() {
+    public int getSlideTarget() {
         return target;
     }
 
-    //Actions
-    public Action updateTargetPos(int newTarget) {
+
+    //Actions for Autonomous
+
+    public Action setSlideAction(int newTarget) {
         return t -> {
             target = newTarget;
             return false;
@@ -96,7 +102,7 @@ public class Lift {
                 }
             }
 
-            if ((getTarget() == 0)) { //Properly De-Power Arm/Box
+            if ((getSlideTarget() == 0)) { //Properly De-Power Arm/Box
                 if(leftSlidePosition > 15) {
                     armSystem.armIdle();
                 } else if (leftSlidePosition < 2 && leftSlidePosition >= -1) {

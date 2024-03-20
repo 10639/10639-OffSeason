@@ -36,7 +36,6 @@ public class Builder {
     public Vector2d parkingPose;
     public double backBoard_X = 48;
 
-
     public Builder(String alliance, String side) {
         this.alliance = alliance;
         this.side = side;
