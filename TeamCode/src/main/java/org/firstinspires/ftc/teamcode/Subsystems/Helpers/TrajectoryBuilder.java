@@ -1,14 +1,13 @@
-package org.firstinspires.ftc.teamcode.Subsystems.Trajectories;
+package org.firstinspires.ftc.teamcode.Subsystems.Helpers;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
-public class Builder {
+public class TrajectoryBuilder {
 
     public Action trajCenter;
     public Action trajLeft;
@@ -36,7 +35,7 @@ public class Builder {
     public Vector2d parkingPose;
     public double backBoard_X = 48;
 
-    public Builder(String alliance, String side) {
+    public TrajectoryBuilder(String alliance, String side) {
         this.alliance = alliance;
         this.side = side;
     }
@@ -45,6 +44,7 @@ public class Builder {
         switch(alliance) {
             case "BLUE":
                 if(side == "LEFT") {
+                    //Coordinate Signs: (X,Y)
                     initPose = new Pose2d(13, 58, Math.toRadians(-270));
                     midwayVector = new Vector2d(initPose.position.x, 35);
 
@@ -61,8 +61,9 @@ public class Builder {
                     rightScoringVector = new Vector2d(backBoard_X, (rightRetractPos.position.y) - 11);
 
                     parkingPose = new Vector2d(backBoard_X,58);
-                } else {
-                    initPose = new Pose2d(13, 58, Math.toRadians(-270));
+                } else if(side == "RIGHT") {
+                    //Coordinate Signs: (-X,Y)
+                    initPose = new Pose2d(-13, 58, Math.toRadians(-270));
                     midwayVector = new Vector2d(initPose.position.x, 35);
 
                     leftVector = new Vector2d(22, midwayVector.y);
@@ -81,8 +82,9 @@ public class Builder {
                 }
                 break;
             case "RED":
-                if(side == "left") {
-                    initPose = new Pose2d(13, 58, Math.toRadians(-270));
+                if(side == "LEFT") {
+                    //Coordinate Signs: (-X,-Y)
+                    initPose = new Pose2d(-13, -58, Math.toRadians(-270));
                     midwayVector = new Vector2d(initPose.position.x, 35);
 
                     leftVector = new Vector2d(22, midwayVector.y);
@@ -98,8 +100,9 @@ public class Builder {
                     rightScoringVector = new Vector2d(backBoard_X, (rightRetractPos.position.y) - 11);
 
                     parkingPose = new Vector2d(backBoard_X,58);
-                } else {
-                    initPose = new Pose2d(13, 58, Math.toRadians(-270));
+                } else if(side == "RIGHT") {
+                    //Coordinate Signs: (X,-Y)
+                    initPose = new Pose2d(13, -58, Math.toRadians(-270));
                     midwayVector = new Vector2d(initPose.position.x, 35);
 
                     leftVector = new Vector2d(22, midwayVector.y);

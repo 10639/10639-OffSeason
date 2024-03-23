@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.OpModes.TeleOp;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Cache;
 import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Helpers;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Arm;
@@ -14,8 +15,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Box;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Lift;
 
-@TeleOp(name = "LoopTimeTest")
-public class LoopTimeTest extends LinearOpMode {
+@TeleOp(name = "👑 OffSeason TeleOp ")
+public class Main extends LinearOpMode {
 
     public MecanumDrive driveTrain;
     public Lift liftSystem;
@@ -27,9 +28,10 @@ public class LoopTimeTest extends LinearOpMode {
     public static boolean scoreAllowed = false;
     public static boolean tiltBox = false;
 
+
     @Override
     public void runOpMode() throws InterruptedException {
-
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         driveTrain = new MecanumDrive(hardwareMap, Helpers.defaultTelePose);
         liftSystem = new Lift(hardwareMap);
         armSystem = new Arm(hardwareMap);
@@ -50,10 +52,11 @@ public class LoopTimeTest extends LinearOpMode {
     private void handleScoringConditions() {
         int target = liftSystem.getSlideTarget();
         double leftSlidePosition = liftSystem.leftSlide.getCurrentPosition();
+        double slidePID = liftSystem.getPid();
 
         if (leftSlidePosition > 15) {
             scoreAllowed = true;
-            if (!tiltBox || liftSystem.getPid() < 0) {
+            if (!tiltBox || slidePID < 0) {
                 armSystem.armIdle();
             }
         }
@@ -106,13 +109,13 @@ public class LoopTimeTest extends LinearOpMode {
 
     private void updateLiftTargets(Gamepad gamepad) {
         if (gamepad.square) {
-            liftSystem.setSlideTarget(Constants.LIFT_FIRST_LEVEL);
+            liftSystem.setSlideTarget(Constants.SlidePositions.LOW.getTicks());
         } else if (gamepad.triangle) {
-            liftSystem.setSlideTarget(Constants.LIFT_SECOND_LEVEL);
+            liftSystem.setSlideTarget(Constants.SlidePositions.MEDIUM.getTicks());
         } else if (gamepad.circle) {
-            liftSystem.setSlideTarget(Constants.LIFT_THIRD_LEVEL);
+            liftSystem.setSlideTarget(Constants.SlidePositions.HIGH.getTicks());
         } else if (gamepad.cross) {
-            liftSystem.setSlideTarget(Constants.LIFT_LEVEL_ZERO);
+            liftSystem.setSlideTarget(Constants.SlidePositions.DOWN.getTicks());
         }
     }
 

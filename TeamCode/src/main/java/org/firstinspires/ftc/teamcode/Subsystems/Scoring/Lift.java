@@ -28,7 +28,7 @@ public class Lift {
     }
 
     public void init() {
-        controller = new PIDController(Constants.Kp, Constants.Ki, Constants.Kd);
+        controller = new PIDController(Constants.SlidesPIDF.Kp.getValue(), Constants.SlidesPIDF.Ki.getValue(), Constants.SlidesPIDF.Kd.getValue());
         rightSlide = hardwareMap.get(DcMotorEx.class, "rightSlide");
         leftSlide = hardwareMap.get(DcMotorEx.class, "leftSlide");
 
@@ -45,14 +45,14 @@ public class Lift {
     }
 
     public void loop(Telemetry telemetry) {
-        controller.setPID(Constants.Kp, Constants.Ki, Constants.Kd);
+        controller.setPID(Constants.SlidesPIDF.Kp.getValue(), Constants.SlidesPIDF.Ki.getValue(), Constants.SlidesPIDF.Kd.getValue());
         int leftPosition = leftSlide.getCurrentPosition();
         pid = controller.calculate(leftPosition, target);
-        double power = pid + Constants.Kf;
+        double power = pid + Constants.SlidesPIDF.Kf.getValue();
         if (pid < 0) { // Going down
-            power = Math.max(power, Constants.MAX_LIFT_TERMINAL_VELO);
+            power = Math.max(power, Constants.VelocityConfig.LIFT_TERMINAL.getVelocity());
         } else { //Going up
-            power = Math.min(power, Constants.MAX_LIFT_VELO); //Power Range 0 -> 0.8;
+            power = Math.min(power, Constants.VelocityConfig.LIFT_UP.getVelocity());; //Power Range 0 -> 0.8;
         }
         leftSlide.setPower(power);
         rightSlide.setPower(power);
@@ -64,8 +64,6 @@ public class Lift {
         telemetry.addData("Left Slide Current (Amps)", leftSlide.getCurrent(CurrentUnit.AMPS));
         telemetry.addData("Right Slide Current (Amps)", rightSlide.getCurrent(CurrentUnit.AMPS));
         telemetry.addData("Power Allocated", power);
-
-
 
     }
 

@@ -35,7 +35,9 @@ public class Cache {
     }
 
     public void resetBulkCache(Telemetry telemetry) {
-        allHubs.forEach(LynxModule::clearBulkCache); //Reset Bulk Cache
+        for (LynxModule hub : allHubs) {
+            hub.clearBulkCache();
+        } //Reset Bulk Cache
         telemetry.addLine("--- Bulk Cache ---");
         telemetry.addLine("Bulk Cache Reset");
     }

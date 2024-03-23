@@ -1,27 +1,18 @@
 package org.firstinspires.ftc.teamcode.OpModes.Autonomous;
 
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.InstantAction;
-import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Helpers;
+import org.firstinspires.ftc.teamcode.Subsystems.Helpers.TrajectoryBuilder;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Arm;
-import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Box;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Lift;
-import org.firstinspires.ftc.teamcode.Subsystems.Trajectories.Builder;
-import org.firstinspires.ftc.teamcode.Subsystems.Vision.Pipeline;
-import org.firstinspires.ftc.teamcode.Subsystems.Vision.Webcam;
 
 @Autonomous(name = "👮‍♂️ Dev Auto", preselectTeleOp = "CenterStage_TeleOp")
 public class TrajecTest extends LinearOpMode {
@@ -30,14 +21,15 @@ public class TrajecTest extends LinearOpMode {
     public Arm armSystem;
     public Intake intakeSystem;
     public Lift liftSystem;
-    public Builder trajecBuilder;
+    public TrajectoryBuilder trajecBuilder;
 
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         driveTrain = new MecanumDrive(hardwareMap, Helpers.defaultTelePose);
         liftSystem = new Lift(hardwareMap);
         armSystem = new Arm(hardwareMap);
-        trajecBuilder = new Builder("BLUE", "LEFT");
+        trajecBuilder = new TrajectoryBuilder("BLUE", "LEFT");
 
         initializeSubsystems();
 

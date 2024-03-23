@@ -1,25 +1,21 @@
 package org.firstinspires.ftc.teamcode.OpModes.Autonomous;
 
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.InstantAction;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Helpers;
+import org.firstinspires.ftc.teamcode.Subsystems.Helpers.TrajectoryBuilder;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Arm;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Box;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Lift;
-import org.firstinspires.ftc.teamcode.Subsystems.Trajectories.Builder;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.Pipeline;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.Webcam;
 
@@ -32,19 +28,20 @@ public class AutoTest extends LinearOpMode {
     public Lift liftSystem;
     public Box pixelDetector;
     public Webcam Camera;
-    public Builder trajecBuilder;
+    public TrajectoryBuilder trajecBuilder;
     public Pipeline pipeline;
 
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         driveTrain = new MecanumDrive(hardwareMap, Helpers.defaultTelePose);
         liftSystem = new Lift(hardwareMap);
         armSystem = new Arm(hardwareMap);
         intakeSystem = new Intake(hardwareMap);
         pixelDetector = new Box(hardwareMap);
         Camera = new Webcam(hardwareMap);
-        pipeline = new Pipeline(telemetry);
-        trajecBuilder = new Builder("BLUE", "LEFT");
+        pipeline = new Pipeline("BLUE");
+        trajecBuilder = new TrajectoryBuilder("BLUE", "LEFT");
 
         initializeSubsystems();
         Pipeline.Location location = Pipeline.Location.RIGHT;
@@ -60,7 +57,7 @@ public class AutoTest extends LinearOpMode {
                 .splineTo(trajecBuilder.leftScoringVector, Math.toRadians(0))
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
-                        liftSystem.setSlideAction(Constants.LIFT_FIRST_LEVEL),
+                        liftSystem.setSlideAction(Constants.SlidePositions.LOW.getTicks()),
                         armSystem.Arm_IDLE()
                 ))
                 .waitSeconds(1)
@@ -70,7 +67,7 @@ public class AutoTest extends LinearOpMode {
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
                         intakeSystem.BoxIntake_TERMINATE(),
-                        liftSystem.setSlideAction(Constants.LIFT_LEVEL_ZERO),
+                        liftSystem.setSlideAction(Constants.SlidePositions.DOWN.getTicks()),
                         armSystem.Arm_IDLE()
                 ))
                 .strafeToConstantHeading(trajecBuilder.parkingPose)
@@ -89,7 +86,7 @@ public class AutoTest extends LinearOpMode {
                 .splineTo(trajecBuilder.centerScoringVector, Math.toRadians(0))
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
-                        liftSystem.setSlideAction(Constants.LIFT_FIRST_LEVEL),
+                        liftSystem.setSlideAction(Constants.SlidePositions.LOW.getTicks()),
                         armSystem.Arm_IDLE()
                 ))
                 .waitSeconds(1)
@@ -99,7 +96,7 @@ public class AutoTest extends LinearOpMode {
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
                         intakeSystem.BoxIntake_TERMINATE(),
-                        liftSystem.setSlideAction(Constants.LIFT_LEVEL_ZERO),
+                        liftSystem.setSlideAction(Constants.SlidePositions.DOWN.getTicks()),
                         armSystem.Arm_IDLE()
                 ))
                 .strafeToConstantHeading(trajecBuilder.parkingPose)
@@ -117,7 +114,7 @@ public class AutoTest extends LinearOpMode {
                 .splineTo(trajecBuilder.rightScoringVector, Math.toRadians(0))
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
-                        liftSystem.setSlideAction(Constants.LIFT_FIRST_LEVEL),
+                        liftSystem.setSlideAction(Constants.SlidePositions.LOW.getTicks()),
                         armSystem.Arm_IDLE()
                 ))
                 .waitSeconds(1)
@@ -127,7 +124,7 @@ public class AutoTest extends LinearOpMode {
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
                         intakeSystem.BoxIntake_TERMINATE(),
-                        liftSystem.setSlideAction(Constants.LIFT_LEVEL_ZERO),
+                        liftSystem.setSlideAction(Constants.SlidePositions.DOWN.getTicks()),
                         armSystem.Arm_IDLE()
                 ))
                 .strafeToConstantHeading(trajecBuilder.parkingPose)
@@ -147,7 +144,7 @@ public class AutoTest extends LinearOpMode {
 
         //Built-in opModeIsActive check inside of runBlocking() so no need to double loop it by moving this inside of our opModeIsActive loop.
         Actions.runBlocking(new Helpers.RaceParallelCommand(
-                location == Pipeline.Location.MIDDLE ?
+                location == Pipeline.Location.CENTER ?
                         trajecBuilder.trajCenter :
                         location == Pipeline.Location.LEFT
                                 ? trajecBuilder.trajLeft

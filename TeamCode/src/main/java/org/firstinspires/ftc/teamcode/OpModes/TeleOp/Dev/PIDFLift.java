@@ -49,10 +49,10 @@ public class PIDFLift extends OpMode {
     @Override
     public void loop() {
 
-        controller.setPID(Constants.Kp, Constants.Ki, Constants.Kd);
+        controller.setPID(Constants.SlidesPIDF.Kp.getValue(), Constants.SlidesPIDF.Ki.getValue(), Constants.SlidesPIDF.Kd.getValue());
         int leftPosition = leftSlide.getCurrentPosition();
         double pid = controller.calculate(leftPosition, target);
-        double power = pid + Constants.Kf;
+        double power = pid + Constants.SlidesPIDF.Kf.getValue();
         if (pid < 0) { // Going down
             power = Math.max(power, -0.1);
         } else { //Going up

@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Vision;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
 import org.opencv.core.Core;
@@ -9,86 +12,88 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-
+@Config
 public class Pipeline extends OpenCvPipeline {
 
-    Telemetry telemetry;
-    public Pipeline(Telemetry t) {
-
-        telemetry = t;
-
-    }
     Mat mat = new Mat();
-    Mat mat1 = new Mat();
-    Mat mat2 = new Mat();
 
-    Rect leftRect = new Rect(45, 75, 250, 250); // define our regions of interest (where the algorithm is focusing on) as rectangles
-    Rect midRect = new Rect(500, 75, 350, 200);
+    String alliance;
+    Scalar lowHSV;
+    Scalar highHSV;
+    Rect LEFT_RECT, CENTER_RECT, RIGHT_RECT;
 
+    double leftRectValue, centerRectValue, rightRectValue;
     double PERCENT_THRESHOLD = Constants.CONFIDENCE; // define our threshold
-    Scalar red = new Scalar(255, 0, 0); // define what the color of the rectangle outline is that appears on the output (red)
 
-    public enum Location {
-        RIGHT,
-        MIDDLE,
-        LEFT
-    }
+    FtcDashboard dashboard = FtcDashboard.getInstance();
+    Telemetry telemetry = dashboard.getTelemetry();
 
+    public enum Location { LEFT, CENTER, RIGHT }
     private Location location;
+
+    public Pipeline(String alliance) {
+        this.alliance = alliance;
+    }
 
     @Override
     public Mat processFrame(Mat input) {
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV); // change the color space from rgb to HSV (Hue, Saturation, Value)
-        Scalar lowRedBound = new Scalar(0, 60, 60); // set lower and upper bounds for the color we want to recognize (red in this case)
-        Scalar highRedBound = new Scalar(20, 500, 500);
 
-        Scalar lowRedBound2 = new Scalar(160, 60, 60);
-        Scalar highRedBound2 = new Scalar(180, 255, 255);
-
-        Core.inRange(mat, lowRedBound, highRedBound, mat1);
-        Core.inRange(mat, lowRedBound2, highRedBound2, mat2);
-        Core.bitwise_or(mat1, mat2, mat);
-
-        Mat middle = mat.submat(midRect);
-        Mat left = mat.submat(leftRect);
-
-        double midValue = Core.sumElems(middle).val[0] / midRect.area() / 255;
-        double letftValue = Core.sumElems(left).val[0] / leftRect.area() / 255;
-
-        telemetry.addData("Middle percentage value", midValue);
-        telemetry.addData("Left percentage value", letftValue);
-
-        left.release();
-        middle.release();
-
-        Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGB);
-        Imgproc.rectangle(mat, leftRect, red, 2);
-        Imgproc.rectangle(mat, midRect, red, 2);
-
-        if (letftValue > PERCENT_THRESHOLD || midValue > PERCENT_THRESHOLD){
-            if(letftValue > midValue) {
-                location = Pipeline.Location.LEFT;
-                telemetry.addData("Location", "Left");
-                Imgproc.rectangle(mat, leftRect, new Scalar(0, 255, 0), 2); // change the rectangle of the detected position to green
-            } else {
-                location = Pipeline.Location.MIDDLE;
-                telemetry.addData("Location", "Middle");
-                Imgproc.rectangle(mat, midRect, new Scalar(0, 255, 0), 2);
-            }
-        } else {
-            location = Location.RIGHT;
-            telemetry.addData("Location", "Right");
-            Imgproc.rectangle(mat, new Rect(100, 100, 50, 50), new Scalar(0, 255, 0), 2);
+        switch(alliance) {
+            case "BLUE":
+                lowHSV = new Scalar(100, 40, 40);
+                highHSV = new Scalar(125, 500, 500);
+                break;
+            case "RED":
+                lowHSV = new Scalar(0, 60, 60);
+                highHSV = new Scalar(20, 500, 500);
+                break;
         }
-        //TODO: Right Default
+
+        LEFT_RECT = new Rect(45, 75, 250, 250);
+        CENTER_RECT = new Rect(500, 75, 250, 250);
+        RIGHT_RECT = new Rect(700, 75, 250, 250);
+
+        Core.inRange(mat, lowHSV, highHSV, mat);
+
+        Mat Left = mat.submat(RIGHT_RECT);
+        Mat Center = mat.submat(CENTER_RECT);
+        Mat Right = mat.submat(LEFT_RECT);
+
+        leftRectValue = Core.sumElems(Left).val[0] / LEFT_RECT.area() / 255;
+        centerRectValue = Core.sumElems(Center).val[0] / CENTER_RECT.area() / 255;
+        rightRectValue = Core.sumElems(Right).val[0] / RIGHT_RECT.area() / 255;
+
+
+        Imgproc.rectangle(mat, LEFT_RECT, new Scalar(60, 255, 255), 5);
+        Imgproc.rectangle(mat, CENTER_RECT, new Scalar(60, 255, 255), 5);
+        Imgproc.rectangle(mat, RIGHT_RECT, new Scalar(60, 255, 255), 5);
+
+        if (leftRectValue > PERCENT_THRESHOLD && leftRectValue > centerRectValue && leftRectValue > rightRectValue) {
+            Imgproc.rectangle(mat, LEFT_RECT, new Scalar(60, 255, 255), 10);
+            location = Location.LEFT;
+        } else if (rightRectValue > PERCENT_THRESHOLD && rightRectValue > centerRectValue && rightRectValue > leftRectValue) {
+            Imgproc.rectangle(mat, RIGHT_RECT, new Scalar(60, 255, 255), 10);
+            location = Location.RIGHT;
+        } else {
+            Imgproc.rectangle(mat, CENTER_RECT, new Scalar(60, 255, 255), 10);
+            location = Location.CENTER;
+        }
+
+        telemetry.addData("Left Region %", leftRectValue);
+        telemetry.addData("Center Region %", centerRectValue);
+        telemetry.addData("Right Region %", rightRectValue);
+        telemetry.addData("Determined Region", location);
+        telemetry.update();
+
+        Left.release();
+        Center.release();
+        Right.release();
+
         return mat;
     }
 
     public Location getLocation(){
-
         return location;
-
     }
-
-
 }

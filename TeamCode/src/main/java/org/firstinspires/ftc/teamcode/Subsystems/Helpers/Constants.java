@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Helpers;
 
-import org.firstinspires.ftc.teamcode.Subsystems.Vision.Pipeline;
-
 public class Constants {
 
     /** ======= CONSTANTS FOR LIFT  ======= **/
@@ -10,36 +8,46 @@ public class Constants {
     public static final double DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
     public static final double WHEEL_DIAMETER_INCHES   = 1.673 ;     // For figuring circumference
     public static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
-    //19.7498748746487
 
-    public static final double MAX_LIFT_VELO = 1.0;
-    public static final double MAX_LIFT_TERMINAL_VELO = -0.1;
+    public enum SlidePositions {
+        DOWN(0),
+        LOW((int) (17 * COUNTS_PER_INCH)),
+        MEDIUM((int) (19 * COUNTS_PER_INCH)),
+        HIGH((int) (20 * COUNTS_PER_INCH));
+        public final int position;
 
+        SlidePositions(int position) {this.position = position;}
+        public int getTicks() {return this.position;}
+    }
 
-    public static final int FIRST_LEVEL = 17;
-    public static final int SECOND_LEVEL = 19;
-    public static final int THIRD_LEVEL = 20;
-
-    public static final int LIFT_LEVEL_ZERO = 0;
-    public static final int LIFT_FIRST_LEVEL = (int) (FIRST_LEVEL * COUNTS_PER_INCH);
-    public static final int LIFT_SECOND_LEVEL = (int) (SECOND_LEVEL * COUNTS_PER_INCH);
-    public static final int LIFT_THIRD_LEVEL = (int) (THIRD_LEVEL * COUNTS_PER_INCH);
+    public enum SlidesPIDF {
+        Kp(0.1),
+        Ki(0.0),
+        Kd(0.00001),
+        Kf(0.04);
+        public final double value;
+        SlidesPIDF(double value) {this.value = value;}
+        public double getValue() {return this.value;}
+    }
 
     //Proportional, Integral, Derivative gains.
-    public static final double Kp = 0.1, Ki = 0, Kd = 0.00001;
     //P -> Ability to Reach Target Position
     //I -> Leave at 0
     //D -> Dampener to counteract any oscillations
     //F -> Ability to counteract gravity and maintain its position (going up, down, and in place)
     // Feedforward component (F) -> Since we're doing this for a lift; we'll do a G value (gravity).
     //Refer to https://www.ctrlaltftc.com/feedforward-control#slide-gravity-feedforward
-    public static final double Kf = 0.04;
 
+    public enum VelocityConfig {
+        LIFT_UP(1.0),
+        LIFT_TERMINAL(-0.5),
+        DRIVETRAIN_MIN_SPEED(0.5),
+        DRIVETRAIN_MAX_VELO(0.9);
+        public final double velocity;
 
-
-    /** ======= CONSTANTS FOR DRIVETRAIN  ======= **/
-    public static final double MIN_SPEED = 0.5;
-    public static final double MAX_SPEED = 0.9;
+        VelocityConfig(double velocity) {this.velocity = velocity;}
+        public double getVelocity() {return this.velocity;}
+    }
 
 
     /** ======= CONSTANTS FOR ARM  ======= **/

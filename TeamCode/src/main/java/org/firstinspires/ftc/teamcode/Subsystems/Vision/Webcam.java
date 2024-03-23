@@ -1,14 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Vision;
 
-
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.PwmControl;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoImpl;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -38,7 +30,7 @@ public class Webcam {
 
             @Override
             public void onOpened() {
-                device.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT);
+                device.startStreaming(800, 448, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override

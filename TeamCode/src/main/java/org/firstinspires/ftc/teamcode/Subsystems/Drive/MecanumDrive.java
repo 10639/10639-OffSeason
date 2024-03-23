@@ -58,7 +58,7 @@ import java.util.List;
 @Config
 public final class MecanumDrive {
 
-    public double speedMultiplier = Constants.MIN_SPEED;
+    public double speedMultiplier = Constants.VelocityConfig.DRIVETRAIN_MIN_SPEED.getVelocity();
     public static class Params {
         // IMU orientation
         // TODO: fill in these values based on
@@ -482,9 +482,9 @@ public final class MecanumDrive {
 
 
         if (gamepad.left_bumper) {
-            speedMultiplier = Constants.MIN_SPEED;
+            speedMultiplier = Constants.VelocityConfig.DRIVETRAIN_MIN_SPEED.getVelocity();
         } else if (gamepad.right_bumper) {
-            speedMultiplier = Constants.MAX_SPEED;
+            speedMultiplier = Constants.VelocityConfig.DRIVETRAIN_MAX_VELO.getVelocity();
         }
 
         setDrivePowers(new PoseVelocity2d(

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.TeleOp;
+package org.firstinspires.ftc.teamcode.OpModes.TeleOp.Dev;
 
 
 import com.arcrobotics.ftclib.controller.PIDController;
@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Helpers;
 import java.util.List;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Old_TeleOp")
-public class TeleOp extends LinearOpMode {
+public class Old_TeleOp extends LinearOpMode {
 
 
     public MecanumDrive driveTrain;
@@ -57,7 +57,7 @@ public class TeleOp extends LinearOpMode {
         armSystem = new Arm(hardwareMap);
         intakeSystem = new Intake(hardwareMap);
         pixelDetector = new Box(hardwareMap);
-        controller = new PIDController(Constants.Kp, Constants.Ki, Constants.Kd);
+        controller = new PIDController(Constants.SlidesPIDF.Kp.getValue(), Constants.SlidesPIDF.Ki.getValue(), Constants.SlidesPIDF.Kd.getValue());
         ElapsedTime loopTime = new ElapsedTime();
 
         rightSlide = hardwareMap.get(DcMotorEx.class, "rightSlide");
@@ -98,25 +98,25 @@ public class TeleOp extends LinearOpMode {
             pixelDetector.loop(telemetry);
 
             if (gamepad1.square) {
-                target = Constants.LIFT_FIRST_LEVEL;
+                target = Constants.SlidePositions.LOW.getTicks();
             } else if (gamepad1.triangle) {
-                target = Constants.LIFT_SECOND_LEVEL;
+                target = Constants.SlidePositions.MEDIUM.getTicks();
             } else if (gamepad1.circle) {
-                target = Constants.LIFT_THIRD_LEVEL;
+                target = Constants.SlidePositions.HIGH.getTicks();
             } else if (gamepad1.cross) {
                 armSystem.armIdle();
-                target = Constants.LIFT_LEVEL_ZERO;
+                target = Constants.SlidePositions.DOWN.getTicks();
             }
 
-            controller.setPID(Constants.Kp, Constants.Ki, Constants.Kd);
+            controller.setPID(Constants.SlidesPIDF.Kp.getValue(), Constants.SlidesPIDF.Ki.getValue(), Constants.SlidesPIDF.Kd.getValue());
             int leftPosition = leftSlide.getCurrentPosition();
             double pid = controller.calculate(leftPosition, target);
-            double power = pid + Constants.Kf;
+            double power = pid + Constants.SlidesPIDF.Kf.getValue();
             if (pid < 0) { // Going down
-                power = Math.max(power, Constants.MAX_LIFT_TERMINAL_VELO);
+                power = Math.max(power, Constants.VelocityConfig.LIFT_TERMINAL.getVelocity());
                 scoreAllowed = false;
             } else { //Going up
-                power = Math.min(power, Constants.MAX_LIFT_VELO); //Power Range 0 -> 0.8;
+                power = Math.min(power, Constants.VelocityConfig.LIFT_UP.getVelocity()); //Power Range 0 -> 0.8;
             }
             leftSlide.setPower(power);
             rightSlide.setPower(power);
