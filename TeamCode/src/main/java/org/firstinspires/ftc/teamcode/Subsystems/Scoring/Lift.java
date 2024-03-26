@@ -63,6 +63,8 @@ public class Lift {
 
     }
 
+
+
     //Methods
 
     public void setSlideTarget(int newTarget) {
