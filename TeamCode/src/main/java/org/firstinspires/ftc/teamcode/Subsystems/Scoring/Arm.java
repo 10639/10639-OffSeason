@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.hardware.ServoImpl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Helpers.Controller;
+import org.firstinspires.ftc.teamcode.Subsystems.Vision.Pipeline;
 
 public class Arm {
 
@@ -18,7 +20,8 @@ public class Arm {
     public Arm(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
     }
-    public static boolean AUTON_SCORING; //Used to check if the box is currently in a scoring mode for macro verification in auto
+    public enum ArmState { SCORING, IDLE, DEPOWERED }
+    public ArmState State;
 
     public void init() {
          leftPivot = hardwareMap.get(ServoImplEx.class, "leftPivot");
@@ -32,6 +35,7 @@ public class Arm {
 
         leftPivot.setPosition(0);
         rightPivot.setPosition(1);
+        State = ArmState.IDLE;
     }
 
     public void armScore() {
@@ -39,22 +43,26 @@ public class Arm {
 
         leftPivot.setPwmDisable();
         rightPivot.setPosition(1);
+        State = ArmState.SCORING;
     }
 
     public void dePower() {
         leftPivot.setPwmDisable();
         rightPivot.setPwmDisable();
-        AUTON_SCORING = false;
+        State = ArmState.DEPOWERED;
     }
 
-    public void loop(Gamepad gamepad, Telemetry telemetry) {
+    public void loop(Controller Operator, Telemetry telemetry) {
         //Empty for now
+    }
+
+    public ArmState getArmState(){
+        return State;
     }
 
     public Action Arm_IDLE() {
         return t -> {
             armIdle();
-            AUTON_SCORING = false;
             return false;
         };
     }
@@ -62,7 +70,6 @@ public class Arm {
     public Action Arm_SCORE() {
         return t -> {
             armScore();
-            AUTON_SCORING = true;
             return false;
         };
     }
@@ -70,7 +77,6 @@ public class Arm {
     public Action Arm_DEPOWER() {
         return t -> {
             dePower();
-            AUTON_SCORING = false;
             return false;
         };
     }

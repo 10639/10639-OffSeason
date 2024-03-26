@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Arm;
-import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
+import org.firstinspires.ftc.teamcode.Helpers.Constants;
 
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "PIDFLift_Test")
@@ -61,8 +61,9 @@ public class PIDFLift extends OpMode {
         leftSlide.setPower(power);
         rightSlide.setPower(power);
         double leftSlidePosition = leftSlide.getCurrentPosition();
+        Arm.ArmState armState = armSystem.getArmState();
         if (leftSlidePosition > 15) {
-            if( (!(Arm.AUTON_SCORING) || pid < 0)) {
+            if( ((armState != Arm.ArmState.SCORING) || pid < 0)) {
                 armSystem.armIdle();
             }
         }

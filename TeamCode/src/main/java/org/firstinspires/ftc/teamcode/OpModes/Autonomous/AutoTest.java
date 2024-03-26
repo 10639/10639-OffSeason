@@ -9,9 +9,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
-import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Helpers;
-import org.firstinspires.ftc.teamcode.Subsystems.Helpers.TrajectoryBuilder;
+import org.firstinspires.ftc.teamcode.Helpers.Constants;
+import org.firstinspires.ftc.teamcode.Helpers.Helpers;
+import org.firstinspires.ftc.teamcode.Helpers.TrajectoryBuilder;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Arm;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Box;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Intake;
@@ -57,8 +57,7 @@ public class AutoTest extends LinearOpMode {
                 .splineTo(trajecBuilder.leftScoringVector, Math.toRadians(0))
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
-                        liftSystem.setSlideAction(Constants.SlidePositions.LOW.getTicks()),
-                        armSystem.Arm_IDLE()
+                        liftSystem.setSlideAction(Constants.SlidePositions.LOW.getTicks())
                 ))
                 .waitSeconds(1)
                 .afterTime(0, armSystem.Arm_SCORE())
@@ -67,8 +66,7 @@ public class AutoTest extends LinearOpMode {
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
                         intakeSystem.BoxIntake_TERMINATE(),
-                        liftSystem.setSlideAction(Constants.SlidePositions.DOWN.getTicks()),
-                        armSystem.Arm_IDLE()
+                        liftSystem.setSlideAction(Constants.SlidePositions.DOWN.getTicks())
                 ))
                 .strafeToConstantHeading(trajecBuilder.parkingPose)
                 .setReversed(false)
@@ -86,8 +84,7 @@ public class AutoTest extends LinearOpMode {
                 .splineTo(trajecBuilder.centerScoringVector, Math.toRadians(0))
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
-                        liftSystem.setSlideAction(Constants.SlidePositions.LOW.getTicks()),
-                        armSystem.Arm_IDLE()
+                        liftSystem.setSlideAction(Constants.SlidePositions.LOW.getTicks())
                 ))
                 .waitSeconds(1)
                 .afterTime(0, armSystem.Arm_SCORE())
@@ -96,8 +93,7 @@ public class AutoTest extends LinearOpMode {
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
                         intakeSystem.BoxIntake_TERMINATE(),
-                        liftSystem.setSlideAction(Constants.SlidePositions.DOWN.getTicks()),
-                        armSystem.Arm_IDLE()
+                        liftSystem.setSlideAction(Constants.SlidePositions.DOWN.getTicks())
                 ))
                 .strafeToConstantHeading(trajecBuilder.parkingPose)
                 .setReversed(false)
@@ -114,8 +110,7 @@ public class AutoTest extends LinearOpMode {
                 .splineTo(trajecBuilder.rightScoringVector, Math.toRadians(0))
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
-                        liftSystem.setSlideAction(Constants.SlidePositions.LOW.getTicks()),
-                        armSystem.Arm_IDLE()
+                        liftSystem.setSlideAction(Constants.SlidePositions.LOW.getTicks())
                 ))
                 .waitSeconds(1)
                 .afterTime(0, armSystem.Arm_SCORE())
@@ -124,8 +119,7 @@ public class AutoTest extends LinearOpMode {
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
                         intakeSystem.BoxIntake_TERMINATE(),
-                        liftSystem.setSlideAction(Constants.SlidePositions.DOWN.getTicks()),
-                        armSystem.Arm_IDLE()
+                        liftSystem.setSlideAction(Constants.SlidePositions.DOWN.getTicks())
                 ))
                 .strafeToConstantHeading(trajecBuilder.parkingPose)
                 .setReversed(false)

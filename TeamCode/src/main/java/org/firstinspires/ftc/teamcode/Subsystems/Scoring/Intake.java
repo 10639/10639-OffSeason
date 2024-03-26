@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Scoring;
 
 
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,7 +11,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
+import org.firstinspires.ftc.teamcode.Helpers.Constants;
+import org.firstinspires.ftc.teamcode.Helpers.Controller;
 
 
 public class Intake {
@@ -59,23 +57,23 @@ public class Intake {
         retractIntake();
     }
 
-    public void loop(Gamepad gamepad, Telemetry telemetry) {
+    public void loop(Controller Operator, Telemetry telemetry) {
 
-      if(gamepad.right_bumper) { //Extend Intake + Spin Intake Pixels + Sweep inside Box
+      if(Operator.justPressed(Controller.Button.RIGHT_BUMPER)) { //Extend Intake + Spin Intake Pixels + Sweep inside Box
           extendIntake();
           Sweep();
           boxSweep();
-      } else if(gamepad.left_bumper) { //Reverse Intake Spin + Reverse outside Box + Retracts Intake
+      } else if(Operator.justPressed(Controller.Button.LEFT_BUMPER)) { //Reverse Intake Spin + Reverse outside Box + Retracts Intake
           retractIntake();
-      } else if(gamepad.dpad_left) { //Reverses Box Spin
+      } else if(Operator.justPressed(Controller.Button.DPAD_LEFT)) { //Reverses Box Spin
           boxReverseSweep();
-      } else if(gamepad.dpad_down) { //Spin everything out
+      } else if(Operator.justPressed(Controller.Button.DPAD_DOWN)) { //Spin everything out
           reverseSweep();
           boxReverseSweep();
           retractIntake();
-      } else if(gamepad.dpad_right) {
+      } else if(Operator.justPressed(Controller.Button.DPAD_RIGHT)) {
           reverseSweep();
-      }  else if(gamepad.left_stick_y > 0 || gamepad.left_stick_y < 0) { //Terminate Intake Spin
+      }  else if(Operator.getLeftY() > 0 || Operator.getLeftY() < 0) { //Terminate Intake Spin
           terminateSweep();
           terminateBoxSweeper();
       }

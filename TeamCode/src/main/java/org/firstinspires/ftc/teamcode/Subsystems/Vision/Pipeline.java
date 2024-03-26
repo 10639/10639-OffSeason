@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
+import org.firstinspires.ftc.teamcode.Helpers.Constants;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
@@ -29,7 +29,7 @@ public class Pipeline extends OpenCvPipeline {
     Telemetry telemetry = dashboard.getTelemetry();
 
     public enum Location { LEFT, CENTER, RIGHT }
-    private Location location;
+    public Location location;
 
     public Pipeline(String alliance) {
         this.alliance = alliance;

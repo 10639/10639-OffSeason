@@ -41,6 +41,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Helpers.Controller;
 import org.firstinspires.ftc.teamcode.RoadRunner.Drawing;
 import org.firstinspires.ftc.teamcode.RoadRunner.Localizer;
 import org.firstinspires.ftc.teamcode.RoadRunner.ThreeDeadWheelLocalizer;
@@ -48,7 +49,7 @@ import org.firstinspires.ftc.teamcode.RoadRunner.messages.DriveCommandMessage;
 import org.firstinspires.ftc.teamcode.RoadRunner.messages.MecanumCommandMessage;
 import org.firstinspires.ftc.teamcode.RoadRunner.messages.MecanumEncodersMessage;
 import org.firstinspires.ftc.teamcode.RoadRunner.messages.PoseMessage;
-import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
+import org.firstinspires.ftc.teamcode.Helpers.Constants;
 
 import java.lang.Math;
 import java.util.Arrays;
@@ -478,21 +479,21 @@ public final class MecanumDrive {
         );
     }
 
-    public void loop(Gamepad gamepad, Telemetry telemetry) {
+    public void loop(Controller Driver, Telemetry telemetry) {
 
 
-        if (gamepad.left_bumper) {
+        if (Driver.justPressed(Controller.Button.LEFT_BUMPER)) {
             speedMultiplier = Constants.VelocityConfig.DRIVETRAIN_MIN_SPEED.getVelocity();
-        } else if (gamepad.right_bumper) {
+        } else if (Driver.justPressed(Controller.Button.RIGHT_BUMPER)) {
             speedMultiplier = Constants.VelocityConfig.DRIVETRAIN_MAX_VELO.getVelocity();
         }
 
         setDrivePowers(new PoseVelocity2d(
                 new Vector2d(
-                        -gamepad.left_stick_y * speedMultiplier,
-                        -gamepad.left_stick_x * speedMultiplier
+                        Driver.getLeftY() * speedMultiplier,
+                        Driver.getLeftX() * speedMultiplier
                 ),
-                -gamepad.right_stick_x * speedMultiplier
+                Driver.getRightX() * speedMultiplier
         ));
 
         updatePoseEstimate();

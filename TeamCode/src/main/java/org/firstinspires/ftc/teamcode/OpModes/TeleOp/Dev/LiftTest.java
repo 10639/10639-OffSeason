@@ -4,12 +4,11 @@ package org.firstinspires.ftc.teamcode.OpModes.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.Helpers.Controller;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
-import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Helpers;
+import org.firstinspires.ftc.teamcode.Helpers.Helpers;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Arm;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Box;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Intake;
@@ -19,12 +18,9 @@ import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Lift;
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "ManualLift")
 public class LiftTest extends LinearOpMode {
 
-    public MecanumDrive driveTrain;
-    public Lift liftSystem;
     public Arm armSystem;
-    public Intake intakeSystem;
-    public Box pixelDetector;
     public DcMotorEx leftSlide, rightSlide;
+    public Controller Driver;
 
     public static int power = 0;
     public static double leftSlidePosition = 0;
@@ -34,11 +30,9 @@ public class LiftTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        driveTrain = new MecanumDrive(hardwareMap, Helpers.defaultTelePose);
-        liftSystem = new Lift(hardwareMap);
         armSystem = new Arm(hardwareMap);
-        intakeSystem = new Intake(hardwareMap);
-        pixelDetector = new Box(hardwareMap);
+        Driver = new Controller(gamepad1);
+
         initializeSubsystems();
 
         tiltBox = false;
@@ -52,10 +46,7 @@ public class LiftTest extends LinearOpMode {
         if (isStopRequested()) return;
         while (opModeIsActive() && !isStopRequested()) {
 
-            driveTrain.loop(gamepad1, telemetry);
-            armSystem.loop(gamepad2, telemetry);
-            intakeSystem.loop(gamepad2, telemetry);
-            pixelDetector.loop(telemetry);
+            armSystem.loop(Driver, telemetry);
             handleScoringConditions();
             logTelemetry();
         }
@@ -75,13 +66,12 @@ public class LiftTest extends LinearOpMode {
         leftSlide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         leftSlide.setDirection(DcMotor.Direction.FORWARD);
         armSystem.init();
-        intakeSystem.init();
-        pixelDetector.init();
+        Driver.readButtons();
     }
 
 
     private void handleScoringConditions() {
-        leftSlidePosition = liftSystem.leftSlide.getCurrentPosition();
+        leftSlidePosition = leftSlide.getCurrentPosition();
         power = (int) -gamepad2.right_stick_y;
         leftSlide.setPower(power);
         rightSlide.setPower(power);
@@ -111,9 +101,8 @@ public class LiftTest extends LinearOpMode {
 
     private void logTelemetry() {
         telemetry.addLine("--- Motor Voltages ---");
-        telemetry.addData("Intake Current (Amps)", intakeSystem.sweeper.getCurrent(CurrentUnit.AMPS));
-        telemetry.addData("Left Slide Current (Amps)", liftSystem.leftSlide.getCurrent(CurrentUnit.AMPS));
-        telemetry.addData("Right Slide Current (Amps)", liftSystem.rightSlide.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Left Slide Current (Amps)", leftSlide.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Right Slide Current (Amps)", rightSlide.getCurrent(CurrentUnit.AMPS));
         telemetry.update();
     }
 

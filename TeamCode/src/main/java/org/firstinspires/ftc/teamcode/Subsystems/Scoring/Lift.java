@@ -1,10 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Scoring;
 
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.InstantAction;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -12,7 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
+import org.firstinspires.ftc.teamcode.Helpers.Constants;
 
 public class Lift {
 
@@ -52,7 +48,7 @@ public class Lift {
         if (pid < 0) { // Going down
             power = Math.max(power, Constants.VelocityConfig.LIFT_TERMINAL.getVelocity());
         } else { //Going up
-            power = Math.min(power, Constants.VelocityConfig.LIFT_UP.getVelocity());; //Power Range 0 -> 0.8;
+            power = Math.min(power, Constants.VelocityConfig.LIFT_UP.getVelocity());
         }
         leftSlide.setPower(power);
         rightSlide.setPower(power);
@@ -94,8 +90,9 @@ public class Lift {
         return t -> {
             loop(telemetry);
             double leftSlidePosition = leftSlide.getCurrentPosition();
+            Arm.ArmState armState = armSystem.getArmState();
             if (leftSlidePosition > 15) {
-                if( (!(Arm.AUTON_SCORING) || getPid() < 0)) {
+                if( ((armState != Arm.ArmState.SCORING) || getPid() < 0)) {
                     armSystem.armIdle();
                 }
             }

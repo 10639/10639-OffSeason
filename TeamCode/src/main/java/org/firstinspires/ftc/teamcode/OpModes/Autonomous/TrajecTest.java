@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Helpers;
-import org.firstinspires.ftc.teamcode.Subsystems.Helpers.TrajectoryBuilder;
+import org.firstinspires.ftc.teamcode.Helpers.Helpers;
+import org.firstinspires.ftc.teamcode.Helpers.TrajectoryBuilder;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Arm;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Lift;

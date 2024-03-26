@@ -4,12 +4,12 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Helpers.Constants;
+import org.firstinspires.ftc.teamcode.Helpers.Helpers;
+import org.firstinspires.ftc.teamcode.Helpers.Controller;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Constants;
-import org.firstinspires.ftc.teamcode.Subsystems.Helpers.Helpers;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Arm;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Box;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Intake;
@@ -24,10 +24,10 @@ public class Main extends LinearOpMode {
     public Intake intakeSystem;
     public Box pixelDetector;
     public ElapsedTime loopTime;
+    public Controller Driver;
+    public Controller Operator;
 
-    public static boolean scoreAllowed = false;
-    public static boolean tiltBox = false;
-
+    public static boolean isTiltBoxEnabled = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -38,14 +38,14 @@ public class Main extends LinearOpMode {
         intakeSystem = new Intake(hardwareMap);
         pixelDetector = new Box(hardwareMap);
         loopTime = new ElapsedTime();
+        Driver = new Controller(gamepad1);
+        Operator = new Controller(gamepad2);
 
         initializeSubsystems();
         waitForStart();
         if (isStopRequested()) return;
         while (opModeIsActive() && !isStopRequested()) {
             loopSubsystems();
-            handleScoringConditions();
-            telemetry.update();
         }
     }
 
@@ -53,33 +53,29 @@ public class Main extends LinearOpMode {
         int target = liftSystem.getSlideTarget();
         double leftSlidePosition = liftSystem.leftSlide.getCurrentPosition();
         double slidePID = liftSystem.getPid();
+        boolean isScoreReady = (leftSlidePosition > 15) && (target != 0);
 
-        if (leftSlidePosition > 15) {
-            scoreAllowed = true;
-            if (!tiltBox || slidePID < 0) {
-                armSystem.armIdle();
-            }
+        if(isScoreReady && (!isTiltBoxEnabled || slidePID < 0)) {
+            armSystem.armIdle();
         }
 
-        if ((gamepad2.cross || gamepad2.triangle) && scoreAllowed) {
-            tiltBox = true;
+        if ((Operator.justPressed(Controller.Button.CROSS) || Operator.justPressed(Controller.Button.TRIANGLE)) && isScoreReady) {
+            isTiltBoxEnabled = true;
             armSystem.armScore();
         }
 
         if (target == 0) {
-            scoreAllowed = false;
-            tiltBox = false;
+            isTiltBoxEnabled = false;
             if(leftSlidePosition > 15) {
                 armSystem.armIdle();
-            } else if (leftSlidePosition < 2 && leftSlidePosition >= -1) {
+            } else if (leftSlidePosition < 7 && leftSlidePosition >= -1) {
                 armSystem.dePower();
             }
         }
     }
 
     private void initializeSubsystems() {
-        tiltBox = false;
-        scoreAllowed = false;
+        isTiltBoxEnabled = false;
 
         liftSystem.init();
         armSystem.init();
@@ -93,33 +89,34 @@ public class Main extends LinearOpMode {
 
     private void loopSubsystems() {
         loopTime.reset();
+        Operator.readButtons();
+        Driver.readButtons();
 
-        driveTrain.loop(gamepad1, telemetry);
-        armSystem.loop(gamepad2, telemetry);
-        intakeSystem.loop(gamepad2, telemetry);
+        driveTrain.loop(Driver, telemetry);
+        armSystem.loop(Operator, telemetry);
+        intakeSystem.loop(Operator, telemetry);
         pixelDetector.loop(telemetry);
-        updateLiftTargets(gamepad1);
+
         liftSystem.loop(telemetry);
+        updateLiftTargets(Driver);
+        handleScoringConditions();
 
         double loopTimeMs = loopTime.milliseconds();
         telemetry.addLine("--- Loop Times ---");
         telemetry.addData("loopTimeMs", loopTimeMs);
         telemetry.addData("loopTimeHz", 1000.0 / loopTimeMs);
+        telemetry.update();
     }
 
-    private void updateLiftTargets(Gamepad gamepad) {
-        if (gamepad.square) {
+    private void updateLiftTargets(Controller Driver) {
+        if (Driver.justPressed(Controller.Button.SQUARE)) {
             liftSystem.setSlideTarget(Constants.SlidePositions.LOW.getTicks());
-        } else if (gamepad.triangle) {
+        } else if (Driver.justPressed(Controller.Button.TRIANGLE)) {
             liftSystem.setSlideTarget(Constants.SlidePositions.MEDIUM.getTicks());
-        } else if (gamepad.circle) {
+        } else if (Driver.justPressed(Controller.Button.CIRCLE)) {
             liftSystem.setSlideTarget(Constants.SlidePositions.HIGH.getTicks());
-        } else if (gamepad.cross) {
+        } else if (Driver.justPressed(Controller.Button.CROSS)) {
             liftSystem.setSlideTarget(Constants.SlidePositions.DOWN.getTicks());
         }
     }
-
-
 }
-
-
