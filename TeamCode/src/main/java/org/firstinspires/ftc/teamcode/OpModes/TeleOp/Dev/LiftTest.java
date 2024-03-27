@@ -1,20 +1,15 @@
-package org.firstinspires.ftc.teamcode.OpModes.TeleOp;
+package org.firstinspires.ftc.teamcode.OpModes.TeleOp.Dev;
 
-
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Helpers.Controller;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Helpers.Helpers;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Arm;
-import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Box;
-import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Intake;
-import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Lift;
 
-
+@Disabled
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "ManualLift")
 public class LiftTest extends LinearOpMode {
 
@@ -46,7 +41,6 @@ public class LiftTest extends LinearOpMode {
         if (isStopRequested()) return;
         while (opModeIsActive() && !isStopRequested()) {
 
-            armSystem.loop(Driver, telemetry);
             handleScoringConditions();
             logTelemetry();
         }

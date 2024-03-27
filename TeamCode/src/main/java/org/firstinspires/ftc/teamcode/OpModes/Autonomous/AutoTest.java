@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.Helpers.Helpers;
 import org.firstinspires.ftc.teamcode.Helpers.TrajectoryBuilder;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Arm;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Box;
+import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Deposit;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring.Lift;
 import org.firstinspires.ftc.teamcode.Subsystems.Vision.Pipeline;
@@ -23,9 +24,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.Vision.Webcam;
 public class AutoTest extends LinearOpMode {
 
     public MecanumDrive driveTrain;
-    public Arm armSystem;
+    public Deposit depositSystem;
     public Intake intakeSystem;
-    public Lift liftSystem;
     public Box pixelDetector;
     public Webcam Camera;
     public TrajectoryBuilder trajecBuilder;
@@ -35,8 +35,7 @@ public class AutoTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         driveTrain = new MecanumDrive(hardwareMap, Helpers.defaultTelePose);
-        liftSystem = new Lift(hardwareMap);
-        armSystem = new Arm(hardwareMap);
+        depositSystem = new Deposit(hardwareMap);
         intakeSystem = new Intake(hardwareMap);
         pixelDetector = new Box(hardwareMap);
         Camera = new Webcam(hardwareMap);
@@ -57,16 +56,16 @@ public class AutoTest extends LinearOpMode {
                 .splineTo(trajecBuilder.leftScoringVector, Math.toRadians(0))
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
-                        liftSystem.setSlideAction(Constants.SlidePositions.LOW.getTicks())
+                        depositSystem.liftSystem.setSlideAction(Constants.SlidePositions.LOW.getTicks())
                 ))
                 .waitSeconds(1)
-                .afterTime(0, armSystem.Arm_SCORE())
+                .afterTime(0, depositSystem.armSystem.Arm_SCORE())
                 .waitSeconds(1)
                 .afterTime(0, intakeSystem.BoxIntake_SWEEPOUT())
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
                         intakeSystem.BoxIntake_TERMINATE(),
-                        liftSystem.setSlideAction(Constants.SlidePositions.DOWN.getTicks())
+                        depositSystem.liftSystem.setSlideAction(Constants.SlidePositions.DOWN.getTicks())
                 ))
                 .strafeToConstantHeading(trajecBuilder.parkingPose)
                 .setReversed(false)
@@ -84,16 +83,16 @@ public class AutoTest extends LinearOpMode {
                 .splineTo(trajecBuilder.centerScoringVector, Math.toRadians(0))
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
-                        liftSystem.setSlideAction(Constants.SlidePositions.LOW.getTicks())
+                        depositSystem.liftSystem.setSlideAction(Constants.SlidePositions.LOW.getTicks())
                 ))
                 .waitSeconds(1)
-                .afterTime(0, armSystem.Arm_SCORE())
+                .afterTime(0, depositSystem.armSystem.Arm_SCORE())
                 .waitSeconds(1)
                 .afterTime(0, intakeSystem.BoxIntake_SWEEPOUT())
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
                         intakeSystem.BoxIntake_TERMINATE(),
-                        liftSystem.setSlideAction(Constants.SlidePositions.DOWN.getTicks())
+                        depositSystem.liftSystem.setSlideAction(Constants.SlidePositions.DOWN.getTicks())
                 ))
                 .strafeToConstantHeading(trajecBuilder.parkingPose)
                 .setReversed(false)
@@ -110,16 +109,16 @@ public class AutoTest extends LinearOpMode {
                 .splineTo(trajecBuilder.rightScoringVector, Math.toRadians(0))
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
-                        liftSystem.setSlideAction(Constants.SlidePositions.LOW.getTicks())
+                        depositSystem.liftSystem.setSlideAction(Constants.SlidePositions.LOW.getTicks())
                 ))
                 .waitSeconds(1)
-                .afterTime(0, armSystem.Arm_SCORE())
+                .afterTime(0, depositSystem.armSystem.Arm_SCORE())
                 .waitSeconds(1)
                 .afterTime(0, intakeSystem.BoxIntake_SWEEPOUT())
                 .waitSeconds(1)
                 .afterTime(0, new SequentialAction(
                         intakeSystem.BoxIntake_TERMINATE(),
-                        liftSystem.setSlideAction(Constants.SlidePositions.DOWN.getTicks())
+                        depositSystem.liftSystem.setSlideAction(Constants.SlidePositions.DOWN.getTicks())
                 ))
                 .strafeToConstantHeading(trajecBuilder.parkingPose)
                 .setReversed(false)
@@ -143,17 +142,16 @@ public class AutoTest extends LinearOpMode {
                         location == Pipeline.Location.LEFT
                                 ? trajecBuilder.trajLeft
                                 : trajecBuilder.trajRight,
-                liftSystem.update(armSystem, telemetry)
+                depositSystem.autoDeposit(telemetry)
         ));
         Camera.stopStream();
 
     }
 
     private void initializeSubsystems() {
-        liftSystem.init();
-        armSystem.init();
+        Camera.init();
+        depositSystem.init();
         intakeSystem.init();
         pixelDetector.init();
-        Camera.init();
     }
 }

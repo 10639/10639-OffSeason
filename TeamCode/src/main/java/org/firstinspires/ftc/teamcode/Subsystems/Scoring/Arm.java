@@ -1,17 +1,11 @@
 package org.firstinspires.ftc.teamcode.Subsystems.Scoring;
 
-
 import com.acmerobotics.roadrunner.Action;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.PwmControl;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoImpl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helpers.Controller;
-import org.firstinspires.ftc.teamcode.Subsystems.Vision.Pipeline;
 
 public class Arm {
 
@@ -52,8 +46,14 @@ public class Arm {
         State = ArmState.DEPOWERED;
     }
 
-    public void loop(Controller Operator, Telemetry telemetry) {
-        //Empty for now
+    public void loop(Controller Operator, Boolean isScoreReady, Telemetry telemetry) {
+
+        if ((Operator.justPressed(Controller.Button.CROSS) || Operator.justPressed(Controller.Button.TRIANGLE)) && isScoreReady) {
+            armScore();
+        }
+        telemetry.addLine("--- Arm ---");
+        telemetry.addData("Arm State", getArmState());
+
     }
 
     public ArmState getArmState(){
