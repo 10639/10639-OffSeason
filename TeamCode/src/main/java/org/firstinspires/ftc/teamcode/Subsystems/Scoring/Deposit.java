@@ -10,38 +10,40 @@ public class Deposit {
 
 
     private final HardwareMap hardwareMap;
+    private Telemetry telemetry;
     public Lift liftSystem;
     public Arm armSystem;
 
-    public Deposit(HardwareMap hardwareMap) {
+    public Deposit(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
+        this.telemetry = telemetry;
     }
 
     public void init() {
 
-        liftSystem = new Lift(hardwareMap);
-        armSystem = new Arm(hardwareMap);
+        liftSystem = new Lift(hardwareMap, telemetry);
+        armSystem = new Arm(hardwareMap, telemetry);
 
         liftSystem.init();
         armSystem.init();
 
     }
 
-    public void loop(Controller Driver, Controller Operator, Telemetry telemetry) {
+    public void loop(Controller Driver, Controller Operator) {
 
-        liftSystem.loop(telemetry);
+        liftSystem.loop();
         liftSystem.driverControl(Driver);
-        depositMacros(armSystem, Operator, telemetry);
+        depositMacros(armSystem, Operator);
 
     }
 
-    private void depositMacros(Arm armSystem, Controller Operator, Telemetry telemetry) {
+    private void depositMacros(Arm armSystem, Controller Operator) {
         double leftSlidePosition = liftSystem.leftSlide.getCurrentPosition();
         double slidePID = liftSystem.getPid();
         double slideTarget = liftSystem.getSlideTarget();
         boolean isScoreReady = (leftSlidePosition > 15) && (slideTarget != 0);
 
-        armSystem.loop(Operator, isScoreReady, telemetry);
+        armSystem.loop(Operator, isScoreReady);
         Arm.ArmState armState = armSystem.getArmState();
 
         if(isScoreReady && (armState != Arm.ArmState.SCORING || slidePID < 0)) {
@@ -51,9 +53,9 @@ public class Deposit {
         }
     }
 
-    public Action autoDeposit(Telemetry telemetry) {
+    public Action autoDeposit() {
         return t -> {
-            liftSystem.loop(telemetry);
+            liftSystem.loop();
             double leftSlidePosition = liftSystem.leftSlide.getCurrentPosition();
             double slidePID = liftSystem.getPid();
             double slideTarget = liftSystem.getSlideTarget();

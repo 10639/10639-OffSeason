@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class TrajectoryBuilder {
 
+    private Telemetry telemetry;
     public Action trajCenter;
     public Action trajLeft;
     public Action trajRight;
@@ -35,11 +36,12 @@ public class TrajectoryBuilder {
     public Vector2d parkingPose;
     public double backBoard_X = 48;
 
-    public TrajectoryBuilder(String alliance, String side) {
+    public TrajectoryBuilder(String alliance, String side, Telemetry telemetry) {
         this.alliance = alliance;
         this.side = side;
+        this.telemetry = telemetry;
     }
-    public void calculatePoses(Telemetry telemetry) {
+    public void calculate() {
 
         switch(alliance) {
             case "BLUE":

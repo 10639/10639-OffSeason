@@ -30,23 +30,46 @@ public class AutoTest extends LinearOpMode {
     public Webcam Camera;
     public TrajectoryBuilder trajecBuilder;
     public Pipeline pipeline;
+    Pipeline.Location location;
 
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         driveTrain = new MecanumDrive(hardwareMap, Helpers.defaultTelePose);
-        depositSystem = new Deposit(hardwareMap);
-        intakeSystem = new Intake(hardwareMap);
-        pixelDetector = new Box(hardwareMap);
+        depositSystem = new Deposit(hardwareMap, telemetry);
+        intakeSystem = new Intake(hardwareMap, telemetry);
+        pixelDetector = new Box(hardwareMap, telemetry);
         Camera = new Webcam(hardwareMap);
         pipeline = new Pipeline("BLUE");
-        trajecBuilder = new TrajectoryBuilder("BLUE", "LEFT");
+        trajecBuilder = new TrajectoryBuilder("BLUE", "LEFT", telemetry);
 
         initializeSubsystems();
-        Pipeline.Location location = Pipeline.Location.RIGHT;
-        Camera.device.setPipeline(pipeline);
+        setTrajectoryActions();
 
-        trajecBuilder.calculatePoses(telemetry);
+
+        while (!isStarted()) {
+            location = pipeline.getLocation();
+            telemetry.addData("Identified Location", location);
+            telemetry.addLine("Ready to Start! [Preload + Park)");
+            telemetry.update();
+        }
+
+        waitForStart();
+
+        //Built-in opModeIsActive check inside of runBlocking() so no need to double loop it by moving this inside of our opModeIsActive loop.
+        Actions.runBlocking(new Helpers.RaceParallelCommand(
+                location == Pipeline.Location.CENTER ?
+                        trajecBuilder.trajCenter :
+                        location == Pipeline.Location.LEFT
+                                ? trajecBuilder.trajLeft
+                                : trajecBuilder.trajRight,
+                depositSystem.autoDeposit()
+        ));
+        Camera.stopStream();
+
+    }
+
+    private void setTrajectoryActions() {
         trajecBuilder.trajLeft = driveTrain.actionBuilder(trajecBuilder.initPose)
                 .setReversed(true)
                 .splineTo(trajecBuilder.midwayVector, Math.toRadians(-90))
@@ -125,27 +148,6 @@ public class AutoTest extends LinearOpMode {
                 .lineToX(trajecBuilder.backBoard_X + 15)
                 .waitSeconds(0.5)
                 .build();
-
-
-        while (!isStarted()) {
-            location = pipeline.getLocation();
-            telemetry.addData("Identified Location", location);
-            telemetry.addLine("Ready to Start! [Preload + Park)");
-            telemetry.update();
-        }
-        waitForStart();
-
-        //Built-in opModeIsActive check inside of runBlocking() so no need to double loop it by moving this inside of our opModeIsActive loop.
-        Actions.runBlocking(new Helpers.RaceParallelCommand(
-                location == Pipeline.Location.CENTER ?
-                        trajecBuilder.trajCenter :
-                        location == Pipeline.Location.LEFT
-                                ? trajecBuilder.trajLeft
-                                : trajecBuilder.trajRight,
-                depositSystem.autoDeposit(telemetry)
-        ));
-        Camera.stopStream();
-
     }
 
     private void initializeSubsystems() {
@@ -153,5 +155,10 @@ public class AutoTest extends LinearOpMode {
         depositSystem.init();
         intakeSystem.init();
         pixelDetector.init();
+
+        location = Pipeline.Location.RIGHT;
+        Camera.device.setPipeline(pipeline);
+        trajecBuilder.calculate();
     }
+
 }

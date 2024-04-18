@@ -10,9 +10,11 @@ import org.firstinspires.ftc.teamcode.Helpers.Controller;
 public class Arm {
 
     private final HardwareMap hardwareMap;
+    private Telemetry telemetry;
     public ServoImplEx leftPivot, rightPivot;
-    public Arm(HardwareMap hardwareMap) {
+    public Arm(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
+        this.telemetry = telemetry;
     }
     public enum ArmState { SCORING, IDLE, DEPOWERED }
     public ArmState State;
@@ -46,7 +48,7 @@ public class Arm {
         State = ArmState.DEPOWERED;
     }
 
-    public void loop(Controller Operator, Boolean isScoreReady, Telemetry telemetry) {
+    public void loop(Controller Operator, Boolean isScoreReady) {
 
         if ((Operator.justPressed(Controller.Button.CROSS) || Operator.justPressed(Controller.Button.TRIANGLE)) && isScoreReady) {
             armScore();

@@ -14,13 +14,15 @@ import org.firstinspires.ftc.teamcode.Helpers.Controller;
 public class Lift {
 
     private final HardwareMap hardwareMap;
+    private Telemetry telemetry;
     public DcMotorEx leftSlide, rightSlide;
     private PIDController controller;
     private double pid;
     public int target;
 
-    public Lift(HardwareMap hardwareMap) {
+    public Lift(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
+        this.telemetry = telemetry;
         this.target = 0;
     }
 
@@ -41,7 +43,7 @@ public class Lift {
         target = 0;
     }
 
-    public void loop(Telemetry telemetry) {
+    public void loop() {
         controller.setPID(Constants.SlidesPIDF.Kp.getValue(), Constants.SlidesPIDF.Ki.getValue(), Constants.SlidesPIDF.Kd.getValue());
         int leftPosition = leftSlide.getCurrentPosition();
         pid = controller.calculate(leftPosition, target);

@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Helpers.Constants;
@@ -18,11 +19,13 @@ import org.firstinspires.ftc.teamcode.Helpers.Controller;
 public class Intake {
 
     private final HardwareMap hardwareMap;
+    private Telemetry telemetry;
     public DcMotorEx sweeper;
     public CRServo boxSweeper;
     public Servo intake;
-    public Intake(HardwareMap hardwareMap) {
+    public Intake(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
+        this.telemetry = telemetry;
     }
 
     public void init() {
@@ -57,7 +60,7 @@ public class Intake {
         retractIntake();
     }
 
-    public void loop(Controller Operator, Telemetry telemetry) {
+    public void loop(Controller Operator) {
 
       if(Operator.justPressed(Controller.Button.RIGHT_BUMPER)) { //Extend Intake + Spin Intake Pixels + Sweep inside Box
           extendIntake();

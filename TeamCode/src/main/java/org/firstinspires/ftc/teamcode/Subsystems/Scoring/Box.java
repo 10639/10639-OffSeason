@@ -10,9 +10,11 @@ import org.firstinspires.ftc.teamcode.Helpers.Constants;
 public class Box {
 
     private final HardwareMap hardwareMap;
+    private Telemetry telemetry;
     public DistanceSensor pixelDetector;
-    public Box(HardwareMap hardwareMap) {
+    public Box(HardwareMap hardwareMap, Telemetry telemtry) {
         this.hardwareMap = hardwareMap;
+        this.telemetry = telemetry;
     }
 
     public enum boxInfo {
@@ -28,7 +30,7 @@ public class Box {
         Size = boxInfo.EMPTY;
     }
 
-    public void loop(Telemetry telemetry) {
+    public void loop() {
         double distance = pixelDetector.getDistance(DistanceUnit.CM);
         if(distance <= Constants.EMPTY_BOX_HIGH && distance > Constants.ONE_PIXEL_HIGH) {
            Size = boxInfo.EMPTY;
